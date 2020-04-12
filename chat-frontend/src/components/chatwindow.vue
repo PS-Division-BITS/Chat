@@ -69,7 +69,7 @@ export default {
 #messagesBox {
    
     position: absolute;
-    height: 85%;
+    max-height: 85%;
     overflow-x: scroll;
     
 }

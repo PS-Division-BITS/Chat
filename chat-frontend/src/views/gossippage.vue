@@ -2,12 +2,11 @@
     <div class="m-0 p-1 bg-light container-fluid" id="gossippage">
         
         <NAVBAR/>
-    <div class="row">
+    <div class="row container-fluid">
         <GOSSIPCARD
             v-for="data in gossips"
             :key="data.id"
             :data = data
-        
          class="mt-2" />
     </div>
 
