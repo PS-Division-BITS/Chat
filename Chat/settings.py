@@ -131,3 +131,7 @@ REST_FRAMEWORK = {
 }
 
 # cross origin resource sharing between Vue and Django
+if DEBUG:
+    CORS_ORIGIN_ALLOW_ALL = True
+else:
+    CORS_ORIGIN_WHITELIST = []
