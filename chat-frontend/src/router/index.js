@@ -26,7 +26,7 @@ const routes = [
     name : 'Homepage'
   },
   {
-    path : '/gossips',
+    path : '/rooms',
     component: Gossippage,
     name : 'Gossippage'
   }
@@ -37,5 +37,17 @@ const router = new VueRouter({
   routes,
   mode:'history'
 })
+
+
+// router.beforeEach((to, from, next) => {
+//   if (sessionStorage.getItem('authToken') !== null || to.path === '/') {
+//     next()
+//   }
+//    else {
+//     next('/')
+//   }
+// })
+
+
 
 export default router
