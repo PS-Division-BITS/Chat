@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -73,6 +74,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Chat.wsgi.application'
+
+ASGI_APPLICATION = 'Chat.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_reddis.core.ReddisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379),],
+        },
+    },
+}
 
 
 # Database
