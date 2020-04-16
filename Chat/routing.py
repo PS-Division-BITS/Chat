@@ -1,6 +1,6 @@
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
-import chat.routing
+import chat_app.routing
 
 application = ProtocolTypeRouter({
     'ws/chat/': AuthMiddlewareStack(
