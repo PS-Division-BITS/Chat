@@ -45,17 +45,18 @@ const router = new VueRouter({
 })
 
 
-// router.beforeEach((to, from, next) => {
-//   if (store.state.user === null && to.path !==  '/') {
+router.beforeEach((to, from, next) => {
+  if (store.state.user.username === null && to.path !==  '/') {
+  
+    next('/')
+  }
+   else {
     
-//     next('/')
-//   }
-//    else {
-//       next('')
-//   }
+      next()
+  }
 
  
-// })
+})
 
 
 

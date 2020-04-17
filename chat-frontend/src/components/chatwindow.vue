@@ -52,8 +52,10 @@ export default {
 
               this.setupConnection()
                 this.scrollBottom()
-               
-
+                
+                this.chatSocket.onmessage = (m)=>{
+                    this.messageReceived(JSON.parse(m))
+                }
     },
     methods:{
         
@@ -62,7 +64,7 @@ export default {
              //Establishing Connection
                 try {
                         this.chatSocket.onopen = () => {
-                            console.log('hello');
+                           
                             this.chatSocket.send(JSON.stringify({'message':'hello'}))
                         };
                         console.log('Connection Established!')
@@ -85,7 +87,7 @@ export default {
                    this.chatSocket.send(JSON.stringify({'message':this.message}))
                     console.log('Message Sent to the server');
                     this.chat.push({sender:this.username,message:this.message})
-                      
+                    this.message="";
                     
                 }
                 catch (e)
@@ -94,16 +96,20 @@ export default {
                 }
                 
             }
-            this.message="";
+            
         },
-        onMessageReceive(messageData){
-                
+        
+        
+        messageReceived(messageData){
+                console.log(messageData)
                 this.chat.push(messageData);
         },
+
+
         scrollBottom(){
             var container = this.$el.querySelector("#messagesBox"); 
             container.scrollTop = container.scrollHeight;
-            console.log('scrolled : '+container.scrollHeight)
+           
         }
     },
     updated :function() {
@@ -145,7 +151,7 @@ width:80%;
 
 
 #sender{
-font-size : 12px;
+
 }
 
 #sendBox {
