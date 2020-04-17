@@ -39,17 +39,32 @@ export default {
                     {'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
                     {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'}
 
-            ]
+            ],
+            chatSocket: new WebSocket('ws://127.0.0.1:8000/chat/1/')
         }
     },
+    mounted: function(){
+
+            this.chatSocket.onmessage = (m) => {
+                this.onMessageReceive(JSON.parse(m))
+            }
+            //  this.sockets.on('recieveMessage', eventData => this.onMessageReceive(eventData));            
+
+    },
+
     methods:{
         
         sendMessage(){
-            this.chat.push({'sender':this.username,'message':this.message});
+           
+            //this.chat.push({'sender':this.username,'message':this.message});
+            if(this.message !== "")
+            this.chatSocket.send(JSON.stringify(this.message))
             this.message="";
-            
-            
-        }
+        },
+        onMessageReceive(messageData){
+                
+                this.chat.push(messageData);
+        },
 
     },
     updated :function() {

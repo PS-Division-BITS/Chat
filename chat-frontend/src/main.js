@@ -6,8 +6,27 @@ import './plugins/bootstrap-vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
-
 Vue.config.productionTip = false
+
+//import VueEvents from 'vue-events' // to be uninstalled
+// import VueSocketIO from 'vue-socket.io'
+// import SocketIO from "socket.io-client"
+
+
+
+
+// const options = { path: '/my-app/' };
+
+// Vue.use(new VueSocketIO({
+//   debug: true,
+//   connection: SocketIO('http://metinseylan.com:1992', options), //options object is Optional
+//   vuex: {
+//     store,
+//     actionPrefix: "SOCKET_",
+//     mutationPrefix: "SOCKET_"
+//   }
+// })
+// );
 
 
 new Vue({
