@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# updating conda environment
+echo "Updating conda environment"
+conda env update --file local.yml
+
 # starting the redis server
 echo "Starting redis server"
 docker run -p 6379:6379 -d redis:5
