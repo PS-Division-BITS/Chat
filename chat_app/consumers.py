@@ -7,17 +7,33 @@ from channels.generic.websocket import WebsocketConsumer
 
 
 class ChatConsumer(WebsocketConsumer):
+    def connect(self):
+        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_group_name = 'chat_%s' % self.room_name
+
+        # Join room group
+        async_to_sync(self.channel_layer.group_add)(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        self.accept()
+
+    def disconnect(self, close_code):
+        # Leave room group
+        async_to_sync(self.channel_layer.group_discard)(
+            self.room_group_name,
+            self.channel_name
+        )
+
     # receive message from WebSocket
     def receive(self, text_data=None, bytes_data=None):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.group_room_name = 'chat_%s' % self.room_name
         text_data_json = json.loads(text_data)
         User = get_user_model()
         sender = serializers.serialize('json', User.objects.filter(id=2))
         message = text_data_json['message']
-        # send message to room_group
         async_to_sync(self.channel_layer.group_send)(
-            self.group_room_name,
+            self.room_group_name,
             {
                 'type': 'chat_message',
                 'sender':  sender,
@@ -29,7 +45,6 @@ class ChatConsumer(WebsocketConsumer):
     def chat_message(self, event):
         sender = event['sender']
         message = event['message']
-        print(sender, message)
         # send message to WebSocket
         self.send(text_data=json.dumps(
             {
