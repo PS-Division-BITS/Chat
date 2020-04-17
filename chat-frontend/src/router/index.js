@@ -4,12 +4,14 @@ import Login from '../views/loginpage.vue'
 import Homepage from '../views/homepage.vue'
 import Gossippage from '../views/gossippage.vue'
 
-Vue.use(VueRouter)
+import store from '../store'
+
+Vue.use(VueRouter,store)
 
 const routes = [
   {
     path: '/',
-    name: 'Loginpage',
+    name: 'Login',
     component: Login
   },
   {
@@ -28,7 +30,11 @@ const routes = [
   {
     path : '/rooms',
     component: Gossippage,
-    name : 'Gossippage'
+    name :'Chatrooms'
+  },
+  {
+    path : '/logout',
+    name : 'Logout'
   }
  
 ]
@@ -39,15 +45,18 @@ const router = new VueRouter({
 })
 
 
-router.beforeEach((to, from, next) => {
-  if (localStorage.user !== null || to.path === '/') {
-    next()
-  }
-   else {
-     localStorage.user = null;
-    next('/')
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if (store.state.user === null && to.path !==  '/') {
+    
+//     next('/')
+//   }
+//    else {
+//       next('')
+//   }
+
+ 
+// })
+
 
 
 

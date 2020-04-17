@@ -5,13 +5,12 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const socketBase = "ws://127.0.0.1:8000/ws/chat/";
+const AUTHBASEURL = "http://localhost:8000/chat/auth/";
 
 export default new Vuex.Store({
   state: {
     user : {
-      username : 'testuser',
-      ip : '127.0.0.1',
-      key :'abcbabcbsb',
+      username : null,
     },
    
     currentChatRoom: {
@@ -19,6 +18,7 @@ export default new Vuex.Store({
         totalUsers:999,
         onlineUsers:123,
     },
+   AUTHBASEURL:AUTHBASEURL,
     
     
   },
@@ -35,6 +35,7 @@ export default new Vuex.Store({
 
     updateUser(state,user){
       state.user = user;
+   
     },
 
   },

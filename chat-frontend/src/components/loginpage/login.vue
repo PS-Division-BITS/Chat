@@ -14,9 +14,10 @@ export default {
         return {
             nick:"",
             password:"",
+            
         }
     },
-    created: ()=> {
+    mounted: function() {
         if(localStorage.user){
             this.$store.commit("updateUsername",localStorage.user);
             this.$router.push('Homepage')
@@ -26,7 +27,7 @@ export default {
     methods:{
         signup(){   
         
-            this.$axios.post('http://localhost:8000/chat/auth/users/',{username:this.nick,password:this.password})
+            this.$axios.post(this.$store.state.AUTHBASEURL+'users/',{username:this.nick,password:this.password})
             .then(response=>{
                 console.log('response',response)
             })
