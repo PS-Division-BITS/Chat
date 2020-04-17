@@ -46,8 +46,21 @@ export default {
     },
     mounted: function(){
 
+<<<<<<< HEAD
                this.setupConnection()
                
+=======
+                this.chatSocket.onmessage = function(e){ console.log(e.data); };
+                this.chatSocket.onopen = () => this.chatSocket.send(JSON.stringify({'message': 'hello'}));
+                this.chatSocket.onmessage = (m) => {
+                this.onMessageReceive(JSON.parse(m))
+            }
+            //  this.sockets.on('recieveMessage', eventData => this.onMessageReceive(eventData));            
+
+    },
+
+    computed : {
+>>>>>>> 5bd4cb68fae1cb53d6333ed404849e949e3d3894
 
     },
     methods:{
