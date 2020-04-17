@@ -2,7 +2,7 @@
 
 # updating conda environment
 echo "Updating conda environment"
-conda env update --file local.yml
+conda env update --file env.yaml
 
 # starting the redis server
 echo "Starting redis server"
