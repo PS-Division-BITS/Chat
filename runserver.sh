@@ -6,7 +6,7 @@ conda env update --file local.yml
 
 # starting the redis server
 echo "Starting redis server"
-docker run -p 6379:6379 -d redis:5
+docker run -p 6380:6380 -d redis:5
 
 # running django
 echo "Running migrations"
