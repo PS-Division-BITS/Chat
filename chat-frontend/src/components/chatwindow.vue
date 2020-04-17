@@ -40,12 +40,14 @@ export default {
                     {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'}
 
             ],
-            chatSocket: new WebSocket('ws://127.0.0.1:8000/chat/1/')
+            chatSocket: new WebSocket('ws://127.0.0.1:8000/ws/chat/2/')
         }
     },
     mounted: function(){
 
-            this.chatSocket.onmessage = (m) => {
+                this.chatSocket.onmessage = function(e){ console.log(e.data); };
+                this.chatSocket.onopen = () => this.chatSocket.send('hello');
+                this.chatSocket.onmessage = (m) => {
                 this.onMessageReceive(JSON.parse(m))
             }
             //  this.sockets.on('recieveMessage', eventData => this.onMessageReceive(eventData));            

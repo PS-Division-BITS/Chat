@@ -81,7 +81,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_reddis.core.ReddisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379),],
+            "hosts": [('127.0.0.1', 8080),],
         },
     },
 }
