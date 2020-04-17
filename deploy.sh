@@ -1,5 +1,5 @@
 #!/bin/sh
 
-git fetch upstream master
+git fetch upstream
 git rebase upstream/master
 git push upstream master
