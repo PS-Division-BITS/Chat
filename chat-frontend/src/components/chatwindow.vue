@@ -2,7 +2,7 @@
     <div id="chatwindow" class=" container-fluid m-0 p-0">
         <div class="mb-2 p-3 container-fluid" id="messagesBox">
                
-            <div v-for="data in chat" :key="data.id" class="rounded p-1" id="messageInfo" :class="{'sent': username === data.sender, 'recieved' : username !== data.sender}">
+            <div v-for="data in chat" :key="data.id" class="rounded m-1 p-1" id="messageInfo" :class="{'sent': username === data.sender, 'recieved' : username !== data.sender}">
                
                     <code id="sender"> {{data.sender}} </code> <hr style="width:10%" class="m-0 p-0">
                     <span> {{data.message}}</span>
@@ -37,6 +37,10 @@ export default {
                     {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
                     {'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
                     {'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
+                    {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
+                    {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
+                    {'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
+                    {'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
                     {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'}
 
             ],
@@ -46,7 +50,8 @@ export default {
     },
     mounted: function(){
 
-            //   this.setupConnection()
+              this.setupConnection()
+                this.scrollBottom()
                
 
     },
@@ -79,7 +84,8 @@ export default {
                    
                    this.chatSocket.send(JSON.stringify({'message':this.message}))
                     console.log('Message Sent to the server');
-                    this.chat.push({sender:'rt',message:this.message})
+                    this.chat.push({sender:this.username,message:this.message})
+                      
                     
                 }
                 catch (e)
@@ -94,11 +100,14 @@ export default {
                 
                 this.chat.push(messageData);
         },
-
+        scrollBottom(){
+            var container = this.$el.querySelector("#messagesBox"); 
+            container.scrollTop = container.scrollHeight;
+            console.log('scrolled : '+container.scrollHeight)
+        }
     },
     updated :function() {
-        var container = this.$el.querySelector("#messagesBox");
-            container.scrollTop = container.clientHeight;
+        this.scrollBottom()
     },
     
 }
@@ -113,17 +122,20 @@ export default {
 
 #messagesBox {
    
-    position: absolute;
-    max-height: 85%;
+    position: relative;
+    max-height: 80%;
+    padding-bottom: 10px;
     overflow-y:scroll;
     
 }
 
 #sendBox 
 {
+    margin-top:10px;
     position: fixed ;
     bottom : 0px;
     height:auto;
+  
     width:inherit;
 }
 
@@ -134,7 +146,6 @@ width:80%;
 
 #sender{
 font-size : 12px;
-
 }
 
 #sendBox {
@@ -146,6 +157,8 @@ overflow-x: scroll;
 .recieved {
     margin-right: auto !important;
     text-align: left;
+
+    background-color:linen;
     hr {
         margin-right: auto;
     }
@@ -154,7 +167,7 @@ overflow-x: scroll;
 .sent {
     margin-left: auto !important;
     text-align: right;
-
+    background-color:lightblue;
      hr {
         margin-left: auto !important;
     }

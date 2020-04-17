@@ -35,7 +35,7 @@ export default {
             })
             .catch(error=>{
                 console.log('ERROR :',error)
-
+                        /* has to be moved to try block */ 
                    var success = true;
                 var user = {username:'abc',key:'aaabbbccc'};
                 if(success)
