@@ -32,7 +32,7 @@ export default {
         return {
             username : this.$store.state.user.username,
             message :"",
-            chat :[{'sender':this.username,'message':'Hii Guys, this is my UI design of a chat window'},
+            chat :[{'sender':'testusers','message':'Hii Guys, this is my UI design of a chat window'},
                     {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
                     {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
                     {'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
@@ -40,31 +40,36 @@ export default {
                     {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'}
 
             ],
-            chatSocket: new WebSocket(this.$store.getters.socketURL)
+            chatSocket: new WebSocket(this.$store.getters.socketURL),
+            chatRoom : this.$store.state.currentChatRoom
         }
     },
     mounted: function(){
 
-              
-                this.chatSocket.onopen = () => {
-                    console.log('hello');
-                    this.chatSocket.send({'message':'hello'})
-                };
-                this.chatSocket.onmessage = (m) => 
-                {
-                    this.onMessageReceive(JSON.parse(m))
-                }
-            //  this.sockets.on('recieveMessage', eventData => this.onMessageReceive(eventData));            
+               this.setupConnection()
+               
 
     },
-
-    computed : {
-
-    
-    },
-
     methods:{
         
+        setupConnection()
+        {
+             //Establishing Connection
+                try {
+                        this.chatSocket.onopen = () => {
+                            console.log('hello');
+                            this.chatSocket.send(JSON.stringify({'message':'hello'}))
+                        };
+                        console.log('Connection Established!')
+                }
+                catch(e){
+                        console.log('Error Connecting to chat room with id : '+this.chatRoom.id)
+                }
+                finally {
+                        console.log('finally..')
+                }
+        },
+
         sendMessage(){
            
           
@@ -107,7 +112,7 @@ export default {
    
     position: absolute;
     max-height: 85%;
-    overflow-x: scroll;
+    overflow-x:hidden;
     
 }
 
