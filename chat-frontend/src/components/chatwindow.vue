@@ -45,15 +45,11 @@ export default {
     },
     mounted: function(){
 
-              
-                this.chatSocket.onopen = () => {
-                    console.log('hello');
-                    this.chatSocket.send({'message':'hello'})
-                };
-                this.chatSocket.onmessage = (m) => 
-                {
-                    this.onMessageReceive(JSON.parse(m))
-                }
+                this.chatSocket.onmessage = function(e){ console.log(e.data); };
+                this.chatSocket.onopen = () => this.chatSocket.send(JSON.stringify({'message': 'hello'}));
+                this.chatSocket.onmessage = (m) => {
+                this.onMessageReceive(JSON.parse(m))
+            }
             //  this.sockets.on('recieveMessage', eventData => this.onMessageReceive(eventData));            
 
     },
