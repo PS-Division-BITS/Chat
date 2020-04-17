@@ -50,11 +50,12 @@ export default {
     },
     mounted: function(){
 
-              this.setupConnection()
+                this.setupConnection()
                 this.scrollBottom()
                 
                 this.chatSocket.onmessage = (m)=>{
-                    this.messageReceived(JSON.parse(m))
+                   
+                    this.messageReceived(JSON.parse(m.data))
                 }
     },
     methods:{
@@ -86,7 +87,7 @@ export default {
                    
                    this.chatSocket.send(JSON.stringify({'message':this.message}))
                     console.log('Message Sent to the server');
-                    this.chat.push({sender:this.username,message:this.message})
+                   // this.chat.push({sender:this.username,message:this.message})
                     this.message="";
                     
                 }
@@ -101,7 +102,10 @@ export default {
         
         
         messageReceived(messageData){
-                console.log(messageData)
+                
+             
+                console.log("Web socket response : "+messageData.sender)
+                messageData.sender = messageData.sender['username'];
                 this.chat.push(messageData);
         },
 
