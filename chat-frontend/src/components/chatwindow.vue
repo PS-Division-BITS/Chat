@@ -30,9 +30,9 @@
 export default {
     data: function(){
         return {
-            username :"rt",
+            username : this.$store.state.user.username,
             message :"",
-            chat :[{'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
+            chat :[{'sender':this.username,'message':'Hii Guys, this is my UI design of a chat window'},
                     {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
                     {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
                     {'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
@@ -40,27 +40,47 @@ export default {
                     {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'}
 
             ],
-            chatSocket: new WebSocket('ws://127.0.0.1:8000/ws/chat/2/')
+            chatSocket: new WebSocket(this.$store.getters.socketURL)
         }
     },
     mounted: function(){
 
-                this.chatSocket.onmessage = function(e){ console.log(e.data); };
-                this.chatSocket.onopen = () => this.chatSocket.send('hello');
-                this.chatSocket.onmessage = (m) => {
-                this.onMessageReceive(JSON.parse(m))
-            }
+              
+                this.chatSocket.onopen = () => {
+                    console.log('hello');
+                    this.chatSocket.send({'message':'hello'})
+                };
+                this.chatSocket.onmessage = (m) => 
+                {
+                    this.onMessageReceive(JSON.parse(m))
+                }
             //  this.sockets.on('recieveMessage', eventData => this.onMessageReceive(eventData));            
 
+    },
+
+    computed : {
+
+    
     },
 
     methods:{
         
         sendMessage(){
            
-            //this.chat.push({'sender':this.username,'message':this.message});
+          
             if(this.message !== "")
-            this.chatSocket.send(JSON.stringify(this.message))
+            {
+                try {
+                   
+                   this.chatSocket.send(JSON.stringify(this.message))
+                    console.log('Message Sent to the server');
+                }
+                catch (e)
+                {
+                    console.log('Error : '+e)
+                }
+                
+            }
             this.message="";
         },
         onMessageReceive(messageData){

@@ -39,14 +39,15 @@ const router = new VueRouter({
 })
 
 
-// router.beforeEach((to, from, next) => {
-//   if (sessionStorage.getItem('authToken') !== null || to.path === '/') {
-//     next()
-//   }
-//    else {
-//     next('/')
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if (localStorage.user !== null || to.path === '/') {
+    next()
+  }
+   else {
+     localStorage.user = null;
+    next('/')
+  }
+})
 
 
 

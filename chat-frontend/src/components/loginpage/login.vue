@@ -2,7 +2,6 @@
     <div id="form" class="mx-auto container ">
       
         <input class="form-control" v-model="nick" placeholder="Enter your Nick" type="text" id="nickname" required/>
-        <input class="form-control mt-4" autocomplete="true" v-model="password" placeholder="Make sure to remember your password, because we don't !" type="password" id="password" required/>
         <button class="btn mt-4 btn-outline-primary" @click="signup()" > Get Set Go</button>
    
     </div>
@@ -17,6 +16,13 @@ export default {
             password:"",
         }
     },
+    created: ()=> {
+        if(localStorage.user){
+            this.$store.commit("updateUsername",localStorage.user);
+            this.$router.push('Homepage')
+        }    
+    },
+    
     methods:{
         signup(){   
         
@@ -27,9 +33,7 @@ export default {
             .catch(error=>{
                 console.log('error',error)
             })  
-                
-
-        }
+         }
     }
 }
 </script>
