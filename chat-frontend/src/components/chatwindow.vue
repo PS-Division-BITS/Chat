@@ -115,7 +115,6 @@ export default {
    
     position: absolute;
     max-height: 85%;
- 
     overflow-y:scroll;
     
 }

@@ -27,7 +27,7 @@ export default {
     methods:{
         signup(){   
         
-            this.$axios.get(this.$store.state.AUTHBASEURL+'users/',{username:this.nick,password:this.password})
+            this.$axios.post(this.$store.state.AUTHBASEURL+'users/',{username:this.nick,password:this.password})
             .then(response=>{
                 console.log('response',response)
              
