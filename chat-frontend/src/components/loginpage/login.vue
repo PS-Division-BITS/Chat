@@ -19,20 +19,30 @@ export default {
     },
     mounted: function() {
         if(localStorage.user){
-            this.$store.commit("updateUsername",localStorage.user);
-            this.$router.push('Homepage')
+            this.$store.commit("updateUser",JSON.parse(localStorage.user));
+            this.$router.push({name : 'Homepage'})
         }    
     },
     
     methods:{
         signup(){   
         
-            this.$axios.post(this.$store.state.AUTHBASEURL+'users/',{username:this.nick,password:this.password})
+            this.$axios.get(this.$store.state.AUTHBASEURL+'users/',{username:this.nick,password:this.password})
             .then(response=>{
                 console.log('response',response)
+             
+
             })
             .catch(error=>{
-                console.log('error',error)
+                console.log('ERROR :',error)
+
+                   var success = true;
+                var user = {username:'abc',key:'aaabbbccc'};
+                if(success)
+                {
+                    localStorage.user = JSON.stringify(user)
+                    this.$store.commit('updateUser',user)
+                }
             })  
          }
     }

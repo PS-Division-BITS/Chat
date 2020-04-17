@@ -77,8 +77,10 @@ export default {
             {
                 try {
                    
-                   this.chatSocket.send(JSON.stringify(this.message))
+                   this.chatSocket.send(JSON.stringify({'message':this.message}))
                     console.log('Message Sent to the server');
+                    this.chat.push({sender:'rt',message:this.message})
+                    
                 }
                 catch (e)
                 {
@@ -106,13 +108,15 @@ export default {
 #chatwindow {
     position: absolute;
     height:100%;
+    
 }
 
 #messagesBox {
    
     position: absolute;
     max-height: 85%;
-    overflow-x:hidden;
+ 
+    overflow-y:scroll;
     
 }
 

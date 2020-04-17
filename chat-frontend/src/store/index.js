@@ -15,9 +15,10 @@ export default new Vuex.Store({
    
     currentChatRoom: {
         id:"1/",
-        totalUsers:999,
-        onlineUsers:123,
+        totalUsers:"",
+        onlineUsers:"",
     },
+
    AUTHBASEURL:AUTHBASEURL,
     
     
