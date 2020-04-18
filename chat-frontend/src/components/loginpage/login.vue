@@ -1,6 +1,7 @@
 <template>
     <div  id="form" class="mx-auto container ">
-      <form @submit.prevent="onSubmit" @submit="signup()">
+      <form @submit.prevent="onSubmit">
+        <div class="m-0 mb-5 p-0" v-if="error">     <code>{{errorMessage}}</code></div>
         <input class="form-control" v-model="nick" placeholder="Enter your Nick" type="text" id="nickname" required/>
         <button type="submit" class="btn mt-4 btn-outline-primary"  > Get Set Go</button>
       </form>
@@ -13,7 +14,8 @@ export default {
     data : function(){
         return {
             nick:"",
-          
+            error:false,
+            errorMessage:""
             
         }
     },
@@ -25,23 +27,31 @@ export default {
     },
     
     methods:{
-        signup(){   
+        onSubmit(){   
         
             this.$axios.get(this.$store.state.AUTHBASEURL+'users/?username='+this.nick)
             .then(response=>{
-                console.log('response successful : ',response)
-                this.$store.state.username=this.username
+                response=response.data;
+
+                if(!response.error)
+                {
+                    localStorage.user = JSON.parse(response.user)
+                    this.$store.commit('updateUser',response.user)
+                    this.$router.push('/chat')
+                }
+                else
+                {
+                    this.error=true;
+                    this.errorMessage=response.message;
+                }
+
             })
             .catch(error=>{
                 console.log('ERROR :',error)
                         /* has to be moved to try block */ 
-                   var success = true;
-                var user = {username:'abc',key:'aaabbbccc'};
-                if(success)
-                {
-                    localStorage.user = JSON.stringify(user)
-                    this.$store.commit('updateUser',user)
-                }
+                 
+              
+              
             })  
          }
     }
