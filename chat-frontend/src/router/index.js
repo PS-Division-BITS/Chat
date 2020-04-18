@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '../views/loginpage.vue'
 import Homepage from '../views/homepage.vue'
 import Gossippage from '../views/gossippage.vue'
+import Logoutpage from '../views/logoutpage.vue'
 
 import store from '../store'
 
@@ -34,7 +35,9 @@ const routes = [
   },
   {
     path : '/logout',
+    component : Logoutpage,
     name : 'Logout'
+  
   }
  
 ]
@@ -46,6 +49,7 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
+  console.log('in router : username = '+store.state.user.username);
   if (store.state.user.username === null && to.path !==  '/') {
   
     next('/')

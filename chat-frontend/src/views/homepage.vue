@@ -1,5 +1,5 @@
 <template>
-<div id="homepage" class="m-0 p-0 bg-light container-fluid">
+<div id="homepage" class="m-0 p-0  container-fluid">
   
     <NAVBAR/>
     <CHATWINDOW class=""/>
@@ -31,6 +31,10 @@ export default {
 <style lang="scss" scoped>
 
 #homepage {
+  background: #FFEEEE;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #DDEFBB, #FFEEEE);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #DDEFBB, #FFEEEE); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
   position:fixed;
   height:100%;
 }
