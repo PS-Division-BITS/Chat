@@ -7,12 +7,13 @@ from django.utils.crypto import get_random_string
 User = get_user_model()
 
 def login_view(request):
-    curr_user = request.user
+    username = request.GET['username']
     if request.method == 'GET':
-        if not User.objects.filter(username=curr_user.username).exists():
+        print(username)
+        if not User.objects.filter(username=username).exists():
             try:
                 User.objects.create_user(
-                    username=curr_user.username,
+                    username=username,
                     password=get_random_string(8)
                 )
                 print('1')
@@ -20,8 +21,10 @@ def login_view(request):
                     {
                         'error': False,
                         'message': 'New user registered',
-                        'username': curr_user.username,
-                        'key': curr_user.username
+                        'user': {
+                            'username': username,
+                            'key': username
+                        }
                     }, safe=False
                 )
             except:
