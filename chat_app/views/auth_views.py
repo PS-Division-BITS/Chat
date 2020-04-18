@@ -12,7 +12,7 @@ User = get_user_model()
 
 @csrf_exempt
 def login_view(request):
-    username = request.GET['username']
+    username = request.POST['username']
     if request.method == 'POST':
         if not User.objects.filter(username=username).exists():
             try:
@@ -53,5 +53,46 @@ def login_view(request):
                 {
                     'error': True,
                     'message': 'User already exists!'
+                }, safe=False
+            )
+
+@csrf_exempt
+def verify_token(request):
+    username = request.POST['username']
+    token = request.POST['token']
+    if request.method == 'POST':
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256',])
+        if payload['username'] == username:
+            return JsonResponse(
+                {
+                    'verified': True
+                }, safe=False
+            )
+        else:
+            return JsonResponse(
+                {
+                    'verified': False
+                }, safe=False
+            )
+
+@csrf_exempt
+def logout_view(request):
+    username = request.POST['username']
+    if request.method == 'POST':
+        try:
+            User.objects.filter(username=username).delete()
+            return JsonResponse(
+                {
+                    'username': username,
+                    'error': False,
+                    'message': f'{username} successfully un-registered'
+                }, safe=False
+            )
+        except:
+            return JsonResponse(
+                {
+                    'username': username,
+                    'error': False,
+                    'message': 'Error in deleting username'
                 }, safe=False
             )
