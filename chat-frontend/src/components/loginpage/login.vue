@@ -1,9 +1,9 @@
 <template>
-    <div id="form" class="mx-auto container ">
-      
+    <div  id="form" class="mx-auto container ">
+      <form @submit.prevent="onSubmit" @submit="signup()">
         <input class="form-control" v-model="nick" placeholder="Enter your Nick" type="text" id="nickname" required/>
-        <button class="btn mt-4 btn-outline-primary" @click="signup()" > Get Set Go</button>
-   
+        <button type="submit" class="btn mt-4 btn-outline-primary"  > Get Set Go</button>
+      </form>
     </div>
 </template>
 
@@ -13,7 +13,7 @@ export default {
     data : function(){
         return {
             nick:"",
-            password:"",
+          
             
         }
     },
@@ -27,11 +27,10 @@ export default {
     methods:{
         signup(){   
         
-            this.$axios.get(this.$store.state.AUTHBASEURL+'users/?username='+this.username)
+            this.$axios.get(this.$store.state.AUTHBASEURL+'users/?username='+this.nick)
             .then(response=>{
                 console.log('response successful : ',response)
-             
-
+                this.$store.state.username=this.username
             })
             .catch(error=>{
                 console.log('ERROR :',error)
