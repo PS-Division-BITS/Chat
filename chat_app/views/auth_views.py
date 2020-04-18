@@ -2,13 +2,15 @@ from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.crypto import get_random_string
+from django.views.decorators.csrf import csrf_exempt
 
 
 User = get_user_model()
 
+@csrf_exempt
 def login_view(request):
     username = request.GET['username']
-    if request.method == 'GET':
+    if request.method == 'POST':
         print(username)
         if not User.objects.filter(username=username).exists():
             try:
