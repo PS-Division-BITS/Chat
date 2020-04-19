@@ -30,10 +30,17 @@ export default {
     methods:{
         onSubmit(){   
             this.error=false;
-            this.$axios.post(this.$store.state.AUTHBASEURL+'login/',{'username' : this.nick})
+            console.log('nick '+this.nick)
+            const params = new URLSearchParams();
+            params.append('username',this.nick)
+            this.$axios({
+                method : 'post',
+                url : this.$store.state.AUTHBASEURL+'login/',
+                data : params
+            })
             .then(response=>{
                 response=response.data;
-
+                console.log(response+"response from axios")
                 if(!response.error)
                 {
                     var username = response.user.username;
