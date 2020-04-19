@@ -32,9 +32,10 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data=None, bytes_data=None):
         # request from websocket is received here
         text_data_json = json.loads(text_data)
+        key = text_data_json['key']
+        payload = jwt.decode(key, settings.SECRET_KEY, algorithms=['HS256',])
         User = get_user_model()
-        sender = serializers.serialize('json', User.objects.filter(id=2))
-        sender = list(User.objects.filter(id=2).values('username'))
+        sender = list(User.objects.filter(username=payload['username']).values('username'))
         message = text_data_json['message']
         # sends out an event to the group having name `self.room_group_name`
         async_to_sync(self.channel_layer.group_send)(
