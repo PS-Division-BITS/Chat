@@ -30,7 +30,7 @@ export default {
     methods:{
         onSubmit(){   
             this.error=false;
-            console.log('nick '+this.nick)
+         
             const params = new URLSearchParams();
             params.append('username',this.nick)
             this.$axios({
@@ -45,7 +45,6 @@ export default {
                 {
                     var username = response.user.username;
                     var key = response.user.key;
-
                     var user = {"username":username,"key":key}
                     localStorage.user=user;
                     this.$store.commit('updateUser',user)

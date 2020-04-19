@@ -51,19 +51,35 @@ const router = new VueRouter({
 })
 
 
-router.beforeEach= function(to, from, next)
+router.beforeEach((to, from, next) =>
 {
     
       console.log('in router : username = %s to.path = %s',store.state.user.username,to.path);
   
-      if(to.path!== '/' && verifyToken() === false)
-      next('/logout')
- }
+      if(to.path!== '/' && tokenExist() == false)
+      {
+      console.log('redirecting to /')
+      next('/')
+      }
+      if(to.path!== '/logout' && tokenExist() && verifyToken() === false)
+      {  console.log('redirecting to /logout')
+        next('/logout')
+      }
+
+      next();
+ })
 
 
 
 
-
+function tokenExist(){
+  if(typeof store.state.user == 'undefined' || store.state.user.username == null || store.state.user.key == null)
+ {
+  console.log('token does not exist') 
+  return false
+}
+  return true
+}
 
 
 function verifyToken()
@@ -71,11 +87,14 @@ function verifyToken()
   
   var flag = false;
 
-  if(typeof store.state.user == 'undefined' || store.state.user.username == null || store.state.user.key == null)
-  return false
+ 
   console.log('here')
-  axios.get(store.state.AUTHBASEURL+'verify/?user='+JSON.stringify(store.state.user))
+  const params = new URLSearchParams()
+  params.append('username',store.state.user.username)
+  params.append('token',store.state.user.key)
+  axios.post(store.state.AUTHBASEURL+'token/verify/',params)
   .then(response=>{
+      console.log('Verified token' + response.data)
       flag = response.data.verified;
   })
   .catch(error=>{

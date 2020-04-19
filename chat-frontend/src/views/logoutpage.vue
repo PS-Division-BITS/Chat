@@ -46,6 +46,17 @@ export default {
         sessionStorage.clear();
         this.$store.replaceState({});
 
+
+         this.$axios.get(this.$store.state.AUTHBASEURL+'logout/',)
+            .then(response=>{
+                console.log('logout Successful' + response.data)
+
+            })
+            .catch(error=>{
+                console.log(error)
+             
+            })  
+
     }
 }
 </script>
