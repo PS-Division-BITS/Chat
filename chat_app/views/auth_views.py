@@ -13,7 +13,6 @@ User = get_user_model()
 @csrf_exempt
 def login_view(request):
     username = request.POST['username']
-    print(username,"XX")
     if request.method == 'POST':
         if not User.objects.filter(username=username).exists():
             try:
@@ -29,19 +28,22 @@ def login_view(request):
                 else:
                     ip = request.META.get('REMOTE_ADDR')
                 # creating jwt token
-                encoded = jwt.encode({'username': username, 'ip': ip}, settings.SECRET_KEY, algorithm='HS256')
+                # the encode() method returns a `byte`, we need to decode
+                # it to be able to serialize it
+                encoded = jwt.encode({'username': username, 'ip': ip}, settings.SECRET_KEY, algorithm='HS256').decode('utf-8')
                 return JsonResponse(
                     {
                         'error': False,
                         'message': 'New user registered',
-                        'user':{
+                        'user': {
                             'username': username,
                             'key': encoded
                         }
                     }, safe=False
                 )
-            except:
-                print('2')
+            except Exception as e:
+                # left for debugging
+                print(e)
                 return JsonResponse(
                     {
                         'error': True,
@@ -49,7 +51,6 @@ def login_view(request):
                     }, safe=False
                 )
         else:
-            print('3')
             return JsonResponse(
                 {
                     'error': True,
