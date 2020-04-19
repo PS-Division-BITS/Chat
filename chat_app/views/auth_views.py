@@ -12,8 +12,8 @@ User = get_user_model()
 
 @csrf_exempt
 def login_view(request):
-    username = request.POST['username']
     if request.method == 'POST':
+        username = request.POST['username']
         if not User.objects.filter(username=username).exists():
             try:
                 password = get_random_string(8)
@@ -60,9 +60,9 @@ def login_view(request):
 
 @csrf_exempt
 def verify_token(request):
-    username = request.POST['username']
-    token = request.POST['token']
     if request.method == 'POST':
+        username = request.POST['username']
+        token = request.POST['token']
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256',])
         if payload['username'] == username:
             return JsonResponse(
@@ -79,8 +79,10 @@ def verify_token(request):
 
 @csrf_exempt
 def logout_view(request):
-    username = request.POST['username']
     if request.method == 'POST':
+        token = request.POST['token']
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256',])
+        username = payload['username']
         try:
             User.objects.filter(username=username).delete()
             return JsonResponse(

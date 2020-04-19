@@ -32,8 +32,8 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data=None, bytes_data=None):
         # request from websocket is received here
         text_data_json = json.loads(text_data)
-        key = text_data_json['key']
-        payload = jwt.decode(key, settings.SECRET_KEY, algorithms=['HS256',])
+        token = text_data_json['token']
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256',])
         User = get_user_model()
         sender = list(User.objects.filter(username=payload['username']).values('username'))
         message = text_data_json['message']
@@ -51,7 +51,6 @@ class ChatConsumer(WebsocketConsumer):
     def chat_message(self, event):
         sender = event['sender']
         message = event['message']
-        print(sender, message)
         # send message back to WebSocket
         self.send(text_data=json.dumps(
             {
