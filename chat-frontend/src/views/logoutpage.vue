@@ -41,13 +41,14 @@ export default {
         }
     },
     mounted: function(){
+        
         localStorage.clear();
+        
         this.$store.state.user.username="null";
+        
         sessionStorage.clear();
-        this.$store.replaceState({});
-
-
-         this.$axios.get(this.$store.state.AUTHBASEURL+'logout/',)
+        
+        this.$axios.get(this.$store.state.AUTHBASEURL+'logout/',)
             .then(response=>{
                 console.log('logout Successful' + response.data)
 

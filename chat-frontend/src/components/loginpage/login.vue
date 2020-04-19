@@ -21,8 +21,8 @@ export default {
     },
     mounted: function() {
         if(localStorage.user){
-            console.log('redirecting....')
-            this.$store.commit("updateUser",JSON.parse(localStorage.user));
+            console.log('redirecting.... user = '+JSON.parse(localStorage.user).username+"XX")
+            this.$store.commit("updateUser",JSON.parse((localStorage.user)));
             this.$router.push({name : 'Homepage'})
         }    
     },
@@ -40,13 +40,15 @@ export default {
             })
             .then(response=>{
                 response=response.data;
-                console.log(response+"response from axios")
+               // console.log(response+"response from axios")
                 if(!response.error)
                 {
                     var username = response.user.username;
                     var key = response.user.key;
                     var user = {"username":username,"key":key}
-                    localStorage.user=user;
+                    console.log('USER = %s key = %s ',username,key)
+                    localStorage.user=JSON.stringify(user);
+                    console.log('saved in Local storage as '+JSON.stringify(user))
                     this.$store.commit('updateUser',user)
                     console.log('store user : '+this.$store.state.user)
                     this.$router.push('/chat')
