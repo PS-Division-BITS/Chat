@@ -45,11 +45,15 @@ export default {
         localStorage.clear();
         
         this.$store.state.user.username="null";
-        
+        console.log('logout key : '+this.key)
         sessionStorage.clear();
         var params = new URLSearchParams()
-        params.append('key',this.key)
-        this.$axios.post(this.$store.state.AUTHBASEURL+'logout/',params)
+        params.append('token',this.key)
+        this.$axios({
+                method : 'post',
+                url : this.$store.state.AUTHBASEURL+'logout/',
+                data : params
+            })
             .then(response=>{
                 console.log('logout Successful' + response.data)
             })

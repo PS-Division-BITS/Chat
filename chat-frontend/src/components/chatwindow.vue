@@ -31,7 +31,7 @@ export default {
     data: function(){
         return {
             username : this.$store.state.user.username,
-            key : this.$store.state.user.key,
+            token : this.$store.state.user.key,
             message :"",
             chat :[{'sender':'testusers','message':'Hii Guys, this is my UI design of a chat window'},
                     {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
@@ -86,7 +86,7 @@ export default {
             {
                 try {
                    
-                   this.chatSocket.send(JSON.stringify({'key':this.key,'message':this.message}))
+                   this.chatSocket.send(JSON.stringify({'token':this.token,'message':this.message}))
                     console.log('Message Sent to the server');
                    // this.chat.push({sender:this.username,message:this.message})
                     this.message="";

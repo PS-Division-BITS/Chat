@@ -88,20 +88,21 @@ function verifyToken()
   var flag = false;
 
  
-  console.log('here')
+  
   const params = new URLSearchParams()
   params.append('username',store.state.user.username)
   params.append('token',store.state.user.key)
   axios.post(store.state.AUTHBASEURL+'token/verify/',params)
   .then(response=>{
-      console.log('Verified token' + response.data)
+      
       flag = response.data.verified;
+      console.log("verified : "+flag)
   })
   .catch(error=>{
     console.log(error)
     flag = false;
   })  
-  flag = true;
+ 
 
   return flag;
 
