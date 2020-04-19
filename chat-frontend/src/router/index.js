@@ -6,7 +6,7 @@ import Gossippage from '../views/gossippage.vue'
 import Logoutpage from '../views/logoutpage.vue'
 
 import store from '../store'
-//import axios from  'axios'
+import axios from  'axios'
 
 
 
@@ -51,46 +51,42 @@ const router = new VueRouter({
 })
 
 
-router.beforeEach((to, from, next) => {
-  console.log('in router : username = '+store.state.user.username);
-  if ((typeof store.state.user === 'undefined' || store.state.user.username === null) && to.path !==  '/') {
+router.beforeEach= function(to, from, next)
+{
+    
+      console.log('in router : username = %s to.path = %s',store.state.user.username,to.path);
   
-    next('/')
-  }
-   else {
-      
-    next()
-      // if(verifyToken() || to.path === '/logout' )
-      // next()
-      // else
-      // {
-      // console.log('error')
-      // next('/logout')
-      // }
-    }
-
- 
-})
-
-// function verifyToken()
-// {
-//   if (typeof store.state.user === 'undefined') {
-//     return false
-// }
+      if(to.path!== '/' && verifyToken() === false)
+      next('/logout')
+ }
 
 
-//   axios.get(store.state.AUTHBASEURL+'verify/?user='+JSON.stringify(store.state.user))
-//   .then(response=>{
-//       if(response.data.verified)
-//       return true;
-//       else return false;
-//   })
-//   .catch(error=>{
-//     console.log(error)
-//     return false;
-//   })  
 
-// }
+
+
+
+
+function verifyToken()
+{
+  
+  var flag = false;
+
+  if(typeof store.state.user == 'undefined' || store.state.user.username == null || store.state.user.key == null)
+  return false
+  console.log('here')
+  axios.get(store.state.AUTHBASEURL+'verify/?user='+JSON.stringify(store.state.user))
+  .then(response=>{
+      flag = response.data.verified;
+  })
+  .catch(error=>{
+    console.log(error)
+    flag = false;
+  })  
+  flag = true;
+
+  return flag;
+
+}
 
 
 export default router

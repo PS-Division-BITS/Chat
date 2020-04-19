@@ -12,7 +12,7 @@ User = get_user_model()
 
 @csrf_exempt
 def login_view(request):
-    username = request.POST['username']
+    username = request.POST.get('username',False)
     if request.method == 'POST':
         if not User.objects.filter(username=username).exists():
             try:

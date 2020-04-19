@@ -21,6 +21,7 @@ export default {
     },
     mounted: function() {
         if(localStorage.user){
+            console.log('redirecting....')
             this.$store.commit("updateUser",JSON.parse(localStorage.user));
             this.$router.push({name : 'Homepage'})
         }    
@@ -28,15 +29,20 @@ export default {
     
     methods:{
         onSubmit(){   
-        
-            this.$axios.get(this.$store.state.AUTHBASEURL+'users/?username='+this.nick)
+            this.error=false;
+            this.$axios.post(this.$store.state.AUTHBASEURL+'login/',{'username' : this.nick})
             .then(response=>{
                 response=response.data;
 
                 if(!response.error)
                 {
-                    localStorage.user = JSON.parse(response.user)
-                    this.$store.commit('updateUser',response.user)
+                    var username = response.user.username;
+                    var key = response.user.key;
+
+                    var user = {"username":username,"key":key}
+                    localStorage.user=user;
+                    this.$store.commit('updateUser',user)
+                    console.log('store user : '+this.$store.state.user)
                     this.$router.push('/chat')
                 }
                 else
