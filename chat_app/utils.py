@@ -3,9 +3,5 @@ from django.conf import settings
 import jwt
 
 
-def encode_jwt(payload, secret=settings.SECRET_KEY, algorithm='HS256'):
-    jwt.encode({'username': username, 'ip': ip}, settings.SECRET_KEY, algorithm='HS256').decode('utf-8')
-    pass
-
-def decode_jwt():
-    pass
+def decode_jwt(token, secret=settings.SECRET_KEY, algorithms=['HS256',]):
+    return jwt.decode(token, secret, algorithms=algorithms)

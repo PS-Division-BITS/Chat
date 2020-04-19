@@ -7,6 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 import jwt
 
+from ..utils import decode_jwt
+
 
 User = get_user_model()
 
@@ -62,8 +64,7 @@ def login_view(request):
 def verify_token(request):
     if request.method == 'POST':
         username = request.POST['username']
-        token = request.POST['token']
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256',])
+        payload = decode_jwt(request.POST['token'])
         if payload['username'] == username:
             return JsonResponse(
                 {
@@ -80,8 +81,7 @@ def verify_token(request):
 @csrf_exempt
 def logout_view(request):
     if request.method == 'POST':
-        token = request.POST['token']
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256',])
+        payload = decode_jwt(request.POST['token'])
         username = payload['username']
         try:
             User.objects.filter(username=username).delete()

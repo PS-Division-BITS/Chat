@@ -7,6 +7,8 @@ import jwt
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 
+from .utils import decode_jwt
+
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -32,8 +34,7 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data=None, bytes_data=None):
         # request from websocket is received here
         text_data_json = json.loads(text_data)
-        token = text_data_json['token']
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256',])
+        payload = decode_jwt(text_data_json['token'])
         User = get_user_model()
         sender = list(User.objects.filter(username=payload['username']).values('username'))
         message = text_data_json['message']
