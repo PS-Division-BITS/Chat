@@ -46,11 +46,11 @@ export default {
                     var username = response.user.username;
                     var key = response.user.key;
                     var user = {"username":username,"key":key}
-                    console.log('USER = %s key = %s ',username,key)
+                  //  console.log('USER = %s key = %s ',username,key)
                     localStorage.user=JSON.stringify(user);
-                    console.log('saved in Local storage as '+JSON.stringify(user))
+                   // console.log('saved in Local storage as '+JSON.stringify(user))
                     this.$store.commit('updateUser',user)
-                    console.log('store user : '+this.$store.state.user)
+                  //  console.log('store user : '+this.$store.state.user)
                     this.$router.push('/chat')
                 }
                 else

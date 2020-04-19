@@ -85,7 +85,7 @@ function tokenExist(){
 function verifyToken()
 {
   
-  var flag = false;
+  var flag;
 
  
   
@@ -97,14 +97,15 @@ function verifyToken()
       
       flag = response.data.verified;
       console.log("verified : "+flag)
+      return flag;
   })
   .catch(error=>{
     console.log(error)
-    flag = false;
+    return false;
   })  
  
 
-  return flag;
+  
 
 }
 
