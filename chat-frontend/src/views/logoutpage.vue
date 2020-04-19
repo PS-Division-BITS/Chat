@@ -37,7 +37,7 @@ export default {
     },
     data : function(){
         return {
-              
+            key : this.$store.state.user.key,
         }
     },
     mounted: function(){
@@ -47,11 +47,11 @@ export default {
         this.$store.state.user.username="null";
         
         sessionStorage.clear();
-        
-        this.$axios.get(this.$store.state.AUTHBASEURL+'logout/',)
+        var params = new URLSearchParams()
+        params.append('key',this.key)
+        this.$axios.post(this.$store.state.AUTHBASEURL+'logout/',params)
             .then(response=>{
                 console.log('logout Successful' + response.data)
-
             })
             .catch(error=>{
                 console.log(error)
