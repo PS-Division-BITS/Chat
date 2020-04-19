@@ -67,7 +67,7 @@ export default {
                 try {
                         this.chatSocket.onopen = () => {
                            
-                            this.chatSocket.send(JSON.stringify({'message':'hello'}))
+                         //   this.chatSocket.send(JSON.stringify({'message':'hello'}))
                         };
                         console.log('Connection Established!')
                 }
