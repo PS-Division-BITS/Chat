@@ -4,8 +4,8 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const socketBase = "ws://localhost:8000/ws/chat/";
-const AUTHBASEURL = "http://localhost:8000/chat/auth/";
+const socketBase = "ws://bits-pilani.in:8000/ws/chat/";
+const AUTHBASEURL = "http://bits-pilani.in:8000/chat/auth/";
 
 export default new Vuex.Store({
   state: {
