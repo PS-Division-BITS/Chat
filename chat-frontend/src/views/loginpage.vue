@@ -1,9 +1,13 @@
 <template>
   <div class="bg-light container-fluid" id="loginpage">
     <HEADER /> 
-    <GUEST v-if="toggle" class="fade mt-5 pt-3 mb-2"/>
+      <div style="font-size:1.2em" class="row mt-5 d-flex justify-content-around">
+     <span @click="toggle=false"  :class="{'selected':!toggle}">  Login as Guest</span>
+      <span :class="{'selected':toggle}" @click="toggle=true">Login</span>
+      </div>
+    <GUEST v-if="!toggle" class="fade mt-5 mb-2"/>
     <LOGIN v-if="toggle" class="fade mt-5"/>
-    <RANDOM class="mt-5"/>
+    <RANDOM style="position:absolute; bottom:20%;" class="text-center mt-5"/>
     <FOOTER class=""/>
   </div>
 </template>
@@ -36,7 +40,7 @@ export default {
   },
   data: function(){
     return {
-      toggle:true,
+      toggle:false,
     }
   }
 }
@@ -55,11 +59,19 @@ background: linear-gradient(to right, #DDEFBB, #FFEEEE); /* W3C, IE 10+/ Edge, F
 
 }
 
+
+.selected{
+  text-transform: uppercase;
+  font-weight: bold;
+  border-bottom: 2px solid black ;
+}
+
 .fade{
  
  -webkit-animation: fadeinout .5s linear forwards;
     animation: fadeinout .5s linear forwards;
 }
+
 
 @-webkit-keyframes fadeinout {
   0%{ opacity: 0; }
