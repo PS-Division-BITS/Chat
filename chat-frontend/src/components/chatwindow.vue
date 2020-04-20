@@ -2,9 +2,9 @@
     <div id="chatwindow" class=" container-fluid m-0 p-0">
         <div class="mb-2 p-3 container-fluid" id="messagesBox">
                
-            <div v-for="data in chat" :key="data.id" class="rounded m-1 p-1" id="messageInfo" :class="{'sent': username === data.sender, 'recieved' : username !== data.sender}">
+            <div v-for="data in chat" :key="data.id" class="rounded m-1 p-1" id="messageInfo" :class="{'notification': data.type === 'notification','sent': username === data.sender, 'recieved' : (username !== data.sender && data.type !== 'notification')}">
                
-                    <code id="sender"> {{data.sender}} </code> <hr style="width:10%" class="m-0 p-0">
+                    <code id="sender"> {{data.sender}} <span v-if="data.verified" class="verified"></span> </code> <hr style="width:10%" class="m-0 p-0">
                     <span> {{data.message}}</span>
                
             </div>
@@ -33,16 +33,10 @@ export default {
             username : this.$store.state.user.username,
             token : this.$store.state.user.key,
             message :"",
-            chat :[{'sender':'testusers','message':'Hii Guys, this is my UI design of a chat window'},
-                    {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
-                    {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
-                    {'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
-                    {'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
-                    {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
-                    {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'},
-                    {'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
-                    {'sender':'rt','message':'Hii Guys, this is my UI design of a chat window'},
-                    {'sender':'Anupama','message':'Hii Guys, this is my UI design of a chat window'}
+            chat :[{'type':'notification','message':'Hii Guys, Welcome to chat.bpgc! Feel free to test this development version and report any issues directly at our git repo!'},
+            {'sender':'admin','verified':true,'message':'Hii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
+            {'type':'notification','message':'Abc just joined the chat!'}
+                    
 
             ],
             chatSocket: new WebSocket(this.$store.getters.socketURL),
@@ -167,9 +161,9 @@ overflow-x: scroll;
 
 .recieved {
     margin-right: auto !important;
-    text-align: left;
-
-    background-color:linen;
+    text-align: left;   
+    
+    background-color:#f6e2bc;
     hr {
         margin-right: auto;
     }
@@ -178,9 +172,46 @@ overflow-x: scroll;
 .sent {
     margin-left: auto !important;
     text-align: right;
-    background-color:lightblue;
+    background-color:#fbdbf6;
      hr {
         margin-left: auto !important;
     }
 }
+
+.notification{
+    text-align: center;
+    font-style: italic;
+    font-size: 80%;
+    margin:auto !important;
+    hr {
+        display: none;
+    }
+}
+
+.verified{
+  display:inline-block;
+
+  &:after{
+    /*Add another block-level blank space*/
+    content: '';
+    display: block;
+ 
+    /*Make it a small rectangle so the border will create an L-shape*/
+    width: 6px;
+    height: 12px;
+ 
+    /*Add a white border on the bottom and left, creating that 'L' */
+    border: solid black;
+    border-width: 0 2px 2px 0;
+ 
+    /*Rotate the L 45 degrees to turn it into a checkmark*/
+    transform: rotate(45deg);
+  }
+
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+
 </style>
