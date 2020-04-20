@@ -29,12 +29,15 @@ class Message(TrackableDateModel):
         User, related_name='user_messages', on_delete=models.CASCADE
     )
     content = models.TextField()
-
+   
     def as_json(self):
         return {
             'author': self.author.username,
             'content': self.content
         }
+
+    def last_50_messages(self):
+        return Message.objects.order_by('-create_date').all()[:50]
 
 
 def _generate_unique_uri():

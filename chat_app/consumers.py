@@ -7,7 +7,11 @@ import jwt
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 
+from .models import Message
 from .utils import decode_jwt
+
+
+User = get_user_model()
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -52,6 +56,11 @@ class ChatConsumer(WebsocketConsumer):
     def chat_message(self, event):
         sender = event['sender']
         message = event['message']
+        # saving the message in Database
+        Message.objects.create(
+            author=User.objects.filter(username=sender)[0],
+            content=message
+        )
         # send message back to WebSocket
         self.send(text_data=json.dumps(
             {
