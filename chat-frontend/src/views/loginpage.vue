@@ -2,8 +2,8 @@
   <div class="bg-light container-fluid" id="loginpage">
     <HEADER /> 
       <div style="font-size:1.2em" class="row mt-5 d-flex justify-content-around">
-     <span @click="toggle=false"  :class="{'selected':!toggle}">  Login as Guest</span>
-      <span :class="{'selected':toggle}" @click="toggle=true">Login</span>
+     <span @click="toggle=false"  style="cursor:pointer;" :class="{'selected':!toggle}">  Login as Guest</span>
+      <span style="cursor:pointer;" :class="{'selected':toggle}" @click="toggle=true">Login</span>
       </div>
     <GUEST v-if="!toggle" class="fade mt-5 mb-2"/>
     <LOGIN v-if="toggle" class="fade mt-5"/>
