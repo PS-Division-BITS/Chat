@@ -6,14 +6,6 @@ from uuid import uuid4
 
 User = get_user_model()
 
-def deserialize_user(user):
-    "Deserialize user model into JSON format"
-    return {
-        'id': user.id, 'username': user.username, 'email': user.email,
-        'name': user.get_full_name()
-    }
-
-
 class TrackableDateModel(models.Model):
     "Abstract model to track creation/update date of a model"
     create_date = models.DateTimeField(auto_now_add=True)
@@ -29,15 +21,12 @@ class Message(TrackableDateModel):
         User, related_name='user_messages', on_delete=models.CASCADE
     )
     content = models.TextField()
-   
-    def as_json(self):
-        return {
-            'author': self.author.username,
-            'content': self.content
-        }
 
-    def last_50_messages(self):
-        return Message.objects.order_by('-create_date').all()[:50]
+    @classmethod
+    def last_50_messages(cls):
+        return Message.objects.order_by('-create_date').values(
+            'author', 'content', 'create_date'
+        )[:50]
 
 
 def _generate_unique_uri():

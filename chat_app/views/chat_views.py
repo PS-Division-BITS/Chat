@@ -1,17 +1,18 @@
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.reverse import  reverse
+from rest_framework.views import  APIView
+from rest_framework import permissions
+from rest_framework.response import  Response
 
 from ..models import Message
+from ..serializers import MessageSerializer
 
 
-@login_required
-def preload_msgs(request):
-    msgs = Message.last_50_messages()
-    msgs_as_json = []
-    for msg in msgs:
-        msgs_as_json.append(msg.as_json())
-    return JsonResponse(
-        {
-        'msgs': msgs_as_json
-        }, safe=False
-    )
+class PreloadMessages(APIView):
+    "Returns a list of last 50 or less messages"
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        msgs = Message.last_50_messages()
+        serializers = MessageSerializer(msgs, many=True)
+        return Response(serializers.data)
