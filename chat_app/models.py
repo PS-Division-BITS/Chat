@@ -6,6 +6,12 @@ from uuid import uuid4
 
 User = get_user_model()
 
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_verified = models.BooleanField(default=False)
+
+
 class TrackableDateModel(models.Model):
     "Abstract model to track creation/update date of a model"
     create_date = models.DateTimeField(auto_now_add=True)
