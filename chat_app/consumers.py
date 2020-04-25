@@ -8,7 +8,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 
 from .models import Message
-from .utils import decode_jwt
+from .utils import decode_jwt, verify_token
 
 
 User = get_user_model()
@@ -38,7 +38,8 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data=None, bytes_data=None):
         # request from websocket is received here
         text_data_json = json.loads(text_data)
-        payload = decode_jwt(text_data_json['token'])
+        token = text_data_json['token']
+        payload = decode_jwt(token)
         User = get_user_model()
         sender = list(User.objects.filter(username=payload['username']).values('username'))
         message = text_data_json['message']

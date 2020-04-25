@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 import jwt
 
-from ..utils import decode_jwt
+from ..utils import decode_jwt, verify_token
 
 
 User = get_user_model()
@@ -64,8 +64,8 @@ def login_view(request):
 def verify_token(request):
     if request.method == 'POST':
         username = request.POST['username']
-        payload = decode_jwt(request.POST['token'])
-        if payload['username'] == username:
+        token = request.POST['token']
+        if verify_token(token, username):
             return JsonResponse(
                 {
                     'verified': True
