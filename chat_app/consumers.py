@@ -58,14 +58,18 @@ class ChatConsumer(WebsocketConsumer):
         sender = event['sender']
         message = event['message']
         # saving the message in Database
-        Message.objects.create(
-            author=User.objects.filter(username=sender)[0],
-            content=message
-        )
-        # send message back to WebSocket
-        self.send(text_data=json.dumps(
-            {
-                'sender': sender,
-                'message': message
-            }
-        ))
+        author = User.objects.filter(username=sender)
+        if author:
+            Message.objects.create(
+                author=author[0],
+                content=message
+            )
+            # send message back to WebSocket
+            self.send(text_data=json.dumps(
+                {
+                    'sender': sender,
+                    'message': message
+                }
+            ))
+        else:
+            self.close()
