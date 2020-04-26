@@ -6,9 +6,9 @@
          <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
             <b-collapse id="nav-collapse" is-nav >
                 <b-navbar-nav class="ml-auto text-right">
-                    <b-nav-item href="#" ><p class="m-0 p-0 text-center"><code>Hii {{user.username}}</code></p></b-nav-item>
+                    <b-nav-item href="#" ><p id="username" class="m-0 p-0 text-center">Hii {{user.username}}</p></b-nav-item>
                     <b-nav-item :to="{name : 'Homepage'}" waves-fixed>Campus Chat Room</b-nav-item>
-                    <b-nav-item v-if="!this.user.verified" :to="{name : 'register'}" waves-fixed><span class="text-danger m-0 p-0" style="font-size:90%; font-style:italic;">Register to use our other features!</span> <span style="font-size:85%; " class="m-0 p-0 text-grey"><br> Private Chat | Match Finder! | Multiple Rooms Access. </span></b-nav-item>
+                    <b-nav-item v-if="!this.user.verified" :to="{name : 'register'}" waves-fixed><span class="text-secondary m-0 p-0" style="font-size:90%; font-style:italic;">Register to use our other features!</span> <span style="font-size:85%; " class="m-0 p-0 text-grey"><br> Private Chat | Match Finder! | Multiple Rooms Access. </span></b-nav-item>
                 
                     <!-- <b-nav-item href="#" waves-fixed>1 on 1 Chat</b-nav-item>
                     <b-nav-item :to="{name : 'Chatrooms'}" waves-fixed>Custom Chat Rooms</b-nav-item> -->
@@ -33,5 +33,7 @@ export default {
      
      
 }
-
+#username{
+     font-family: 'Comic Neue', cursive;
+}
 </style>

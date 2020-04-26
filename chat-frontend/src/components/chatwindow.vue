@@ -1,17 +1,44 @@
 <template>
     <div id="chatwindow" class="container-fluid m-0 p-0">
-        <div class="" id="onlineUsers">
-            Online users
+        <div class="py-3" id="onlineUsers">
+            <div class="">  Online users</div>
+            <span class="text-secondary">Beta</span>
+            <hr class="m-0 p-0">
+            
+            <div class="py-3">
+                <div class="border my-1 mx-2" id="user" style="height:60px;">
+                    <div class="img mt-2" style="float:left">
+                        <img src="@/assets/paper-plane-solid.svg" class="img img-fluid" height="40px" width="40px">
+                    </div>
+                    <div class="desc px-3" style="float:left">
+                     <div class="text-left"> Ritik  Taneja</div>
+                       <hr  class="m-0 p-0">
+                      <div class="text-left text-secondary"> Status Status Status Status Status</div>
+                        </div>
+                </div>
+
+            </div>
+
+
+
         </div>
        <div class="container-fluid m-0 p-0" id="wrapper">
             <div class=" p-0 px-1" id="messagesBox">
-                
-                <div v-for="data in chat" :key="data.id" class="my-2" id="messageInfo" :class="{'notification': data.type === 'notification','sent': username === data.sender, 'recieved' : (username !== data.sender && data.type !== 'notification')}">
+             
+                <div v-for="data in chat" :key="data.id" class=" container-fluid " >
                  
-                        <span id="sender"> {{data.sender}} <span v-if="data.verified" class="verified"></span> </span>
+                    <div id="messageInfo" :class="{'notification': data.type === 'notification','sent': username === data.sender, 'recieved' : (username !== data.sender && data.type !== 'notification')}">   
+                       
+                        <span id="sender"> {{data.sender}} 
+                            <span v-if="data.verified" class="verified"></span>
+                                <span v-if="data.type !== 'notification'" class="text-secondary mx-2" :style="data.sender === username ? 'float:left;':'float:right'">00:00</span>
+                         </span>
                         <hr style="width:10%" class="m-0 p-0">
                         <span> {{data.message}}</span>
+
+                    </div>
                    
+                 
                 </div>
             
             </div>
@@ -83,7 +110,7 @@ export default {
 
         sendMessage(){
            
-          document.getElementById("message").blur();
+         // document.getElementById("message").blur();
             if(this.message !== "")
             {
                 try {
@@ -152,10 +179,15 @@ export default {
     display:none;
    
     width:30%;
+     font-family: 'Comic Neue', cursive;
     @media only screen and(min-width: 992px)
     {
         background-color:rgba(234, 240, 250, 0.8);
-       
+        display: block;
+    }
+
+    #user{
+        background-color:rgba(234, 240, 250, 0.9);
     }
  
 }
@@ -186,7 +218,7 @@ export default {
         max-height:80%;
     padding:0 5% 3% 5% !important ;
     margin:0px !important;
-    //background-color:rgba(234, 240, 250, 0.2);
+    background-color:rgba(234, 240, 250, 0.2);
     position: relative;
     min-height: 80%;
     min-width: 100%;
@@ -222,28 +254,11 @@ export default {
     position:relative;
     align-self: flex-end !important;
     margin:0px;
-  //  background-color:rgba(234, 240, 250, 0.6);
+    background-color:rgba(234, 240, 250, 0.6);
     
     }
     
 }
-
-#messageInfo{
-max-width: 80%;
-font-size: 80%;
-padding-bottom:5px;
-position: relative;
-width: auto !important;
-        @media  only screen and (min-width: 992px) {
-
-            max-width: 60%;
-            
-        }
-}
-
-  
-
-
 
 #sendBox {
 input{
@@ -251,18 +266,37 @@ overflow-x: scroll;
 }
 }
 
+#messageInfo{
+
+font-size: 80%;
+
+max-width: 80%;
+padding: 3px 4px 3px 4px ;
+margin-top: 10px;
+margin-bottom: 10px;
+
+        @media  only screen and (min-width: 992px) {
+            max-width: 60%;
+             padding:2px 5px 1px 5px;
+
+        }
+}
+
+
 #sender {
 
         font-size:90%;
         width:auto;
         padding:8px 2px 3px 2px;
+         font-family: 'Comic Neue', cursive;
 }
 
 .recieved {
     margin-right: auto !important;
     text-align: left;   
+   
     margin-left:0px;
-    padding-left:5px;
+   
     border-radius: 15px 18px 18px 5px;
     z-index: 1;
       box-shadow:darkgray 2px 3px;
@@ -276,7 +310,7 @@ overflow-x: scroll;
 .sent {
     margin-left: auto !important;
     text-align: right;
-    padding-right:5px;
+ 
 
     z-index: 1;
     box-shadow:darkgray 2px 3px;
