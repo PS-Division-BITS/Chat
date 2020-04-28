@@ -51,7 +51,7 @@ export default {
         params.append('token',this.key)
         this.$axios({
                 method : 'post',
-                url : this.$store.state.AUTHBASEURL+'logout/',
+                url : this.$store.state.URLS.logout,
                 data : params
             })
             .then(response=>{

@@ -1,5 +1,5 @@
 <template>
-    <div id="chatwindow" class="container-fluid m-0 p-0">
+    <div id="chatwindow" class="container-fluid m-0 p-0 ">
         <div class="py-3" id="onlineUsers">
             <div class="">  Online users</div>
             <span class="text-secondary">Beta</span>
@@ -22,41 +22,52 @@
 
 
         </div>
+        
        <div class="container-fluid m-0 p-0" id="wrapper">
-            <div class=" p-0 px-1" id="messagesBox">
+            <div class=" p-0 pb-5 px-1" id="messagesBox">
              
-                <div v-for="data in chat" :key="data.id" class=" container-fluid " >
+                <div v-for="data in chat" :key="data.id" class="m-0 p-0 container-fluid " >
                  
-                    <div id="messageInfo" :class="{'notification': data.type === 'notification','sent': username === data.sender, 'recieved' : (username !== data.sender && data.type !== 'notification')}">   
-                       
-                        <span id="sender"> {{data.sender}} 
-                            <span v-if="data.verified" class="verified"></span>
-                                <span v-if="data.type !== 'notification'" class="text-secondary mx-2" :style="data.sender === username ? 'float:left;':'float:right'">00:00</span>
-                         </span>
-                        <hr style="width:10%" class="m-0 p-0">
-                        <span> {{data.message}}</span>
+                        <div id="wrapperInside" class="py-1 container-fluid m-0 p-0 ">
+                        
+                                <div id="messageInfo" :class="{'notification': data.type === 'notification','sent': username === data.sender, 'recieved' : (username !== data.sender && data.type !== 'notification')}">   
+                                
+                                    <span id="sender">
+                                        {{data.sender}}
+                                            
+                                            <!-- verified symbol -->
+                                            <span v-if="data.verified" class="verified">
 
-                    </div>
-                   
+                                            </span>
+                                                <!-- timespan display -->
+                                            <span v-if="data.type !== 'notification'" class="text-secondary mx-2" :style="data.sender === username ? 'float:left;':'float:right'">00:00
+                                                
+                                            </span>
+                                        
+                                    </span>
+                                    <hr style="width:10%" class="m-0 p-0">
+                                    <span>
+                                        {{data.message}}
+                                    </span>
+
+                                </div>
+                        </div>
                  
                 </div>
             
             </div>
 
 
-            <div id="sendBox" class="input-group d-flex container-fluid align-content-end m-0 py-2  ">
+            <div id="sendBox" @click="scrollBottom()"  class="input-group d-flex container-fluid align-content-end m-0 py-2  ">
                    
-                    <input id="message" type="text" v-model="message" @keyup.enter="sendMessage()" class="form-control" placeholder="Enter Text Message ...">
+                    <input id="message"  type="text" v-model="message" @keyup.enter="sendMessage()" class="form-control" placeholder="Enter Text Message ...">
                     <span class="input-group-btn">
                         <button class="btn btn-light container" type="button"  @click="sendMessage()">
                             <img class="img img-fluid" src="@/assets/paper-plane-solid.svg"/>
                         </button>
-                     
-                    
-            </span>
-              
-    
+                      </span>
             </div>
+
         </div>
     </div>
 </template>
@@ -70,7 +81,14 @@ export default {
             message :"",
             chat :[{'type':'notification','message':'Hii Guys, Welcome to chat.bpgc! Feel free to test this development version and report any issues directly at our git repo!'},
             {'sender':'admin','verified':true,'message':'Hii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
-            {'type':'notification','message':'Abc just joined the chat!'}
+                {'sender':'ritiktaneja','verified':true,'message':'!  '},
+                 {'type':'notification','message':'! haina mast '},
+                 {'sender':'ritiktaneja','verified':true,'message':'!  '},
+                 {'sender':"ritiktaneja",'verified':true,'message':'Hii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
+                  {'sender':'ritiktaneja','verified':true,'message':'Hii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
+                    {'sender':'admin','verified':true,'message':'H  ii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
+              {'sender':'admin','verified':true,'message':'Hii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
+            
                     
 
             ],
@@ -126,6 +144,7 @@ export default {
 
                    
                     this.message="";
+
                     
                 }
                 catch (e)
@@ -134,6 +153,9 @@ export default {
                 }
                 
             }
+
+            this.scrollBottom();
+           // document.getElementById("message").blur();
             
         },
         
@@ -147,15 +169,19 @@ export default {
         },
 
 
-        scrollBottom(){
+         scrollBottom :function () {
+            
+           
             var container = this.$el.querySelector("#messagesBox"); 
-            container.scrollTop = container.scrollHeight;
+            container.scrollTop =  (container.scrollHeight + container.clientHeight);
+            container.scrollIntoView(false);
+            console.log('Scrolled to : '+container.scrollHeight)
            
         }
     },
-    updated :function() {
+    updated : function() {
         this.scrollBottom()
-    },
+    }
     
 }
 </script>
@@ -166,6 +192,8 @@ export default {
     height:100% !important;
     @media only screen and (min-width: 992px)
     {
+    
+  
     width:100%!important;
 
     left: 0px;
@@ -194,8 +222,6 @@ export default {
 
 #wrapper {
 
-   
-  
     
     @media only screen  and (min-width: 992px){
         width:70%;
@@ -213,7 +239,7 @@ export default {
     position:absolute;  
     overflow-y:scroll !important;
   
-    padding-bottom: 30px !important;
+   
     @media only screen and (min-width: 992px) {
         max-height:80%;
     padding:0 5% 3% 5% !important ;
@@ -227,14 +253,8 @@ export default {
     }
     
 }
-#messagesBox::before{
-    padding-bottom:12px ;
-}
 
-
-
-#sendBox 
-{
+#sendBox {
       
  
     position: fixed;
@@ -266,22 +286,6 @@ overflow-x: scroll;
 }
 }
 
-#messageInfo{
-
-font-size: 80%;
-
-max-width: 80%;
-padding: 3px 4px 3px 4px ;
-margin-top: 10px;
-margin-bottom: 10px;
-
-        @media  only screen and (min-width: 992px) {
-            max-width: 60%;
-             padding:2px 5px 1px 5px;
-
-        }
-}
-
 
 #sender {
 
@@ -291,14 +295,35 @@ margin-bottom: 10px;
          font-family: 'Comic Neue', cursive;
 }
 
+#wrapperInside {
+    overflow: hidden;
+    margin:0 !important;
+}
+
+
+#messageInfo{
+
+font-size: 80%;
+z-index: 1;
+max-width: 80%;
+margin-right: 2px;
+padding: 3px 4px 3px 4px ;
+
+
+        @media  only screen and (min-width: 992px) {
+            max-width: 60%;
+             padding:2px 5px 1px 5px;
+
+        }
+}
+
 .recieved {
     margin-right: auto !important;
     text-align: left;   
-   
+    float:left;
+    
     margin-left:0px;
-   
     border-radius: 15px 18px 18px 5px;
-    z-index: 1;
       box-shadow:darkgray 2px 3px;
     background-color:rgba(83, 147, 241, 0.2);
     hr {
@@ -308,11 +333,10 @@ margin-bottom: 10px;
 }
 
 .sent {
-    margin-left: auto !important;
+   
     text-align: right;
- 
-
-    z-index: 1;
+    float: right;
+    margin-left: auto;
     box-shadow:darkgray 2px 3px;
      border-radius: 18px 0px 5px 5px;
     background-color:rgba(234, 240, 250, 0.4);

@@ -21,7 +21,7 @@ export default {
     },
     mounted: function() {
         if(localStorage.user){
-            console.log('redirecting.... user = '+JSON.parse(localStorage.user).username+"XX")
+            console.log('redirecting.... user = '+JSON.parse(localStorage.user).username)
             this.$store.commit("updateUser",JSON.parse((localStorage.user)));
             this.$router.push({name : 'Homepage'})
         }    
@@ -35,7 +35,7 @@ export default {
             params.append('username',this.nick)
             this.$axios({
                 method : 'post',
-                url : this.$store.state.AUTHBASEURL+'login/',
+                url : this.$store.guestLogin,
                 data : params
             })
             .then(response=>{

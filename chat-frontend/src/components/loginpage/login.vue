@@ -43,7 +43,7 @@ export default {
             params.append('password',this.password)
             this.$axios({
                 method : 'post',
-               // url : this.$store.state.AUTHBASEURL+'login/',
+               // url : this.$store.state.URLS.login,
                 data : params
             })
             .then(response=>{

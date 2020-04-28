@@ -61,11 +61,13 @@ router.beforeEach((to, from, next) =>
       console.log('redirecting to /')
       next('/')
       }
-      if(to.path!== '/logout' && tokenExist() && verifyToken() === false)
-      {  console.log('redirecting to /logout')
+      if(to.path!== '/logout' && tokenExist() && verifyToken() == false)
+      { 
+        console.log('Invalid token, redirecting to logout...')
+        console.log('redirecting to /logout')
         next('/logout')
       }
-
+        console.log('CURRENT PATH = '+to.path)
       next();
  })
 
@@ -82,17 +84,18 @@ function tokenExist(){
 }
 
 
-function verifyToken()
+function verifyToken ()
 {
   
   var flag;
 
  
-  
+  console.log('Verifying token ...')
   const params = new URLSearchParams()
   params.append('username',store.state.user.username)
   params.append('token',store.state.user.key)
-  axios.post(store.state.AUTHBASEURL+'token/verify/',params)
+
+  axios.post(store.state.URLS.verify, params)
   .then(response=>{
       
       flag = response.data.verified;
@@ -100,7 +103,7 @@ function verifyToken()
       return flag;
   })
   .catch(error=>{
-    console.log(error)
+    console.log('in router',error)
     return false;
   })  
  
