@@ -8,7 +8,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 
 from .models import Message
-from .utils import decode_jwt, verify_token
+from .utils import decode_jwt
 
 
 User = get_user_model()
