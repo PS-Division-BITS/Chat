@@ -56,7 +56,7 @@ def _generate_unique_uri():
 
 class Chat(TrackableDateModel):
     "Model for Generic/Group Chat"
-    uri = models.URLField(default=_generate_unique_uri)
+    uri = models.CharField(default=_generate_unique_uri, max_length=20)
     messages = models.ManyToManyField(
         Message, related_name='chat_messages', blank=True,
     )
