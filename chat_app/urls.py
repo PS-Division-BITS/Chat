@@ -8,11 +8,11 @@ urlpatterns = []
 
 # auth endpoints
 urlpatterns += [
-    path('temp-auth/login/', auth_views.login_view),
-    path('temp-auth/logout/', auth_views.logout_view),
-    path('temp-auth/token/verify/', auth_views.verify_token),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
+    path('auth/users/', auth_views.UserRegisterView.as_view()),
+    path('auth/login/', auth_views.VerifiedUserLoginView.as_view()),
+    path('auth/temp-login/', auth_views.UnverifiedUserLoginView.as_view()),
+    path('auth/logout/', auth_views.LogoutView.as_view()),
+    path('auth/token/verify/', auth_views.verify_token),
 ]
 
 # chat/message endpoints
