@@ -4,12 +4,10 @@ from django.contrib.auth import (
     authenticate,
 )
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
 from django.utils.crypto import get_random_string
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.decorators.csrf import csrf_exempt
 
-import jwt
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import  APIView

@@ -18,10 +18,11 @@ urlpatterns += [
 # chat/message endpoints
 urlpatterns += [
     path('preload/', chat_views.PreloadMessages.as_view()),
+    path('user/verify/', chat_views.VerifyUsername.as_view()),
 ]
 
 # only for debugging while using browsable rest-api
 if settings.DEBUG:
     urlpatterns += [
-        path('api-auth/', include('rest_framework.urls'))
+        path('api-auth/', include('rest_framework.urls')),
     ]
