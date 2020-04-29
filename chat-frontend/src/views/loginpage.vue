@@ -2,12 +2,17 @@
   <div class="bg-light container-fluid" id="loginpage">
     <HEADER /> 
       <div style="font-size:1.2em" class="row mt-5 d-flex justify-content-around">
-     <span @click="toggle=false"  style="cursor:pointer;" :class="{'selected':!toggle}">  Login as Guest</span>
-      <span style="cursor:pointer;" :class="{'selected':toggle}" @click="toggle=true">Login</span>
+
+     <span @click="toggle=false" class="rounded p-2"  style="cursor:pointer;" :class="!toggle?'selected':'text-secondary'">  Login as Guest</span>
+      <span style="cursor:pointer;"  class="rounded p-2" :class="toggle?'selected':'text-secondary'" @click="toggle=true">Login</span>
       </div>
-    <GUEST v-if="!toggle" class="fade mt-5 mb-2"/>
-    <LOGIN v-if="toggle" class="fade mt-5"/>
-    <RANDOM style="position:absolute; bottom:20%;" class="text-center mt-5"/>
+
+  <transition name="flip">
+    <GUEST v-if="!toggle" class="flip mt-5 mb-2"/>
+  
+    <LOGIN v-if="toggle" class="flip mt-5"/>
+  </transition>
+    <RANDOM style="position:absolute; left:12%; bottom:20%;" class="text-center mt-5"/>
     <FOOTER class=""/>
   </div>
 </template>
@@ -64,14 +69,25 @@ background: linear-gradient(to right, #DDEFBB, #FFEEEE); /* W3C, IE 10+/ Edge, F
   text-transform: uppercase;
   font-weight: bold;
   border-bottom: 2px solid black ;
+  
+
 }
 
-.fade{
+.flip-enter, .flip-leave-to {
+  opacity : 0;
+  transform: rotateY(90deg);
+}
+.flip-leave, .flip-enter-to {
+ opacity: 1;
+  transform: rotateX(45deg);
+}
+
+
+
+.flip-enter-active, .flip-leave-active {
+  transition: all .8s;
  
- -webkit-animation: fadeinout .5s linear forwards;
-    animation: fadeinout .5s linear forwards;
 }
-
 
 @-webkit-keyframes fadeinout {
   0%{ opacity: 0; }

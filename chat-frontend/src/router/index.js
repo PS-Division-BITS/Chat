@@ -4,6 +4,7 @@ import Login from '../views/loginpage.vue'
 import Homepage from '../views/homepage.vue'
 import Gossippage from '../views/gossippage.vue'
 import Logoutpage from '../views/logoutpage.vue'
+import Register from '../views/register.vue'
 
 import store from '../store'
 import axios from  'axios'
@@ -41,6 +42,11 @@ const routes = [
     component : Logoutpage,
     name : 'Logout'
   
+  },
+  {
+    path :'/register',
+    component: Register,
+    name : 'Register'
   }
  
 ]

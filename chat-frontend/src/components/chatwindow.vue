@@ -342,7 +342,7 @@ padding: 3px 4px 3px 4px ;
 .sent {
    
     text-align: right;
-    
+    float:right;
     margin-left: auto;
      
     box-shadow:darkgray 2px 3px;
