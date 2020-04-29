@@ -57,11 +57,11 @@ def _generate_unique_uri():
 class Chat(TrackableDateModel):
     "Model for Generic/Group Chat"
     uri = models.URLField(default=_generate_unique_uri)
-    message = models.ForeignKey(
-        Message, related_name='chat_messages', on_delete=models.DO_NOTHING
+    messages = models.ManyToManyField(
+        Message, related_name='chat_messages', blank=True,
     )
-    participant = models.ForeignKey(
-        User, related_name='user_chats', on_delete=models.CASCADE
+    participants = models.ManyToManyField(
+        User, related_name='user_chats',
     )
 
 
