@@ -28,9 +28,9 @@
              
                 <div v-for="data in chat" :key="data.id" class="m-0 p-0 container-fluid " >
                  
-                        <div id="wrapperInside" class="py-1 container-fluid m-0 p-0 ">
+                        <div id="wrapperInside" class=" container-fluid py-1 m-0 p-0 ">
                         
-                                <div id="messageInfo" :class="{'notification': data.type === 'notification','sent': username === data.sender, 'recieved' : (username !== data.sender && data.type !== 'notification')}">   
+                                <div id="messageInfo"  :class="{'notification': data.type === 'notification','sent': username === data.sender, 'recieved' : (username !== data.sender && data.type !== 'notification')}">   
                                 
                                     <span id="sender">
                                         {{data.sender}}
@@ -46,9 +46,11 @@
                                         
                                     </span>
                                     <hr style="width:10%" class="m-0 p-0">
-                                    <span>
+                                    <div class="container-fluid m-0 p-0">
+                                    <span id="messageValue" class="w-100">
                                         {{data.message}}
                                     </span>
+                                    </div>
 
                                 </div>
                         </div>
@@ -60,7 +62,7 @@
 
             <div id="sendBox" @click="scrollBottom()"  class="input-group d-flex container-fluid align-content-end m-0 py-2  ">
                    
-                    <input id="message"  type="text" v-model="message" @keyup.enter="sendMessage()" class="form-control" placeholder="Enter Text Message ...">
+                    <input id="message" maxlength="100"  type="text" v-model="message" @keyup.enter="sendMessage()" class="form-control" placeholder="Enter Text Message ...">
                     <span class="input-group-btn">
                         <button class="btn btn-light container" type="button"  @click="sendMessage()">
                             <img class="img img-fluid" src="@/assets/paper-plane-solid.svg"/>
@@ -80,7 +82,7 @@ export default {
             token : this.$store.state.user.key,
             message :"",
             chat :[{'type':'notification','message':'Hii Guys, Welcome to chat.bpgc! Feel free to test this development version and report any issues directly at our git repo!'},
-            {'sender':'admin','verified':true,'message':'Hii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
+                 {'sender':'admin','verified':true,'message':'777777777777777777777777777777777777777777777777777'},
                 {'sender':'ritiktaneja','verified':true,'message':'!  '},
                  {'type':'notification','message':'! haina mast '},
                  {'sender':'ritiktaneja','verified':true,'message':'!  '},
@@ -175,7 +177,7 @@ export default {
             var container = this.$el.querySelector("#messagesBox"); 
             container.scrollTop =  (container.scrollHeight + container.clientHeight);
             container.scrollIntoView(false);
-            console.log('Scrolled to : '+container.scrollHeight)
+            //console.log('Scrolled to : '+container.scrollHeight)
            
         }
     },
@@ -233,15 +235,12 @@ export default {
    
  
     max-height: 84%;
-    
-  
     height:auto;
     position:absolute;  
     overflow-y:scroll !important;
-  
-   
+    width: 100% !important;
     @media only screen and (min-width: 992px) {
-        max-height:80%;
+    max-height:80%;
     padding:0 5% 3% 5% !important ;
     margin:0px !important;
     background-color:rgba(234, 240, 250, 0.2);
@@ -294,10 +293,18 @@ overflow-x: scroll;
         padding:8px 2px 3px 2px;
          font-family: 'Comic Neue', cursive;
 }
+#messageValue {
+    word-wrap: break-word;
+    display: block;
+}
+
 
 #wrapperInside {
     overflow: hidden;
     margin:0 !important;
+    padding-right: 4px;
+    
+    
 }
 
 
@@ -305,8 +312,8 @@ overflow-x: scroll;
 
 font-size: 80%;
 z-index: 1;
-max-width: 80%;
-margin-right: 2px;
+max-width: 60%;
+
 padding: 3px 4px 3px 4px ;
 
 
@@ -335,8 +342,9 @@ padding: 3px 4px 3px 4px ;
 .sent {
    
     text-align: right;
-    float: right;
+    
     margin-left: auto;
+     
     box-shadow:darkgray 2px 3px;
      border-radius: 18px 0px 5px 5px;
     background-color:rgba(234, 240, 250, 0.4);

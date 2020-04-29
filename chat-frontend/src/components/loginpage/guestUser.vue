@@ -30,12 +30,12 @@ export default {
     methods:{
         onSubmit(){   
             this.error=false;
-         
+          
             const params = new URLSearchParams();
             params.append('username',this.nick)
             this.$axios({
                 method : 'post',
-                url : this.$store.guestLogin,
+                url : this.$store.state.URLS.login,
                 data : params
             })
             .then(response=>{
@@ -44,8 +44,8 @@ export default {
                 if(!response.error)
                 {
                     var username = response.user.username;
-                    var key = response.user.key;
-                    var user = {"username":username,"key":key}
+                    var token = response.user.token;
+                    var user = {"username":username,"key":token}
                   //  console.log('USER = %s key = %s ',username,key)
                     localStorage.user=JSON.stringify(user);
                    // console.log('saved in Local storage as '+JSON.stringify(user))
@@ -61,8 +61,10 @@ export default {
 
             })
             .catch(error=>{
-                console.log('ERROR :',error)
+                console.log(' CACHE ERROR :',error)
                         /* has to be moved to try block */ 
+                          this.error=true;
+                    this.errorMessage=error;
                  
               
               

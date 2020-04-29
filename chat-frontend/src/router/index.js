@@ -61,7 +61,7 @@ router.beforeEach((to, from, next) =>
       console.log('redirecting to /')
       next('/')
       }
-      if(to.path!== '/logout' && tokenExist() && verifyToken() == false)
+      if(to.path!== '/logout' && tokenExist() && verifyToken() === false)
       { 
         console.log('Invalid token, redirecting to logout...')
         console.log('redirecting to /logout')
@@ -80,11 +80,12 @@ function tokenExist(){
   console.log('token does not exist') 
   return false
 }
+console.log('Token exists')
   return true
 }
 
 
-function verifyToken ()
+async function verifyToken ()
 {
   
   var flag;
@@ -95,11 +96,13 @@ function verifyToken ()
   params.append('username',store.state.user.username)
   params.append('token',store.state.user.key)
 
-  axios.post(store.state.URLS.verify, params)
+  await axios.post(store.state.URLS.verify, params)
   .then(response=>{
       
       flag = response.data.verified;
-      console.log("verified : "+flag)
+     
+      console.log("Token verified : "+flag)
+    
       return flag;
   })
   .catch(error=>{
