@@ -7,7 +7,7 @@ Vue.use(Vuex)
 const socketBase = "ws://127.0.0.1:8000/ws/chat/";
 const BASEURL = "http://127.0.0.1:8000/chat/";
 
-var AUTHBASEURL = BASEURL + 'temp-auth/';
+var AUTHBASEURL = BASEURL + 'auth/';
 
 //guestUsers
 // var guest = { 
@@ -46,7 +46,7 @@ export default new Vuex.Store({
    AUTHBASEURL:AUTHBASEURL,
 
    URLS : { 
-    login : AUTHBASEURL +'login/',
+    login : AUTHBASEURL +'temp-login/',
     logout : AUTHBASEURL + 'logout/',
     verify : AUTHBASEURL+'token/verify/'
         },
