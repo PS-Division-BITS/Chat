@@ -187,7 +187,7 @@ background: linear-gradient(to right, #C06C84, #6C5B7B, #355C7D); /* W3C, IE 10+
     position:absolute;
     margin:auto !important;
    top:40%;
-   left:20%;
+   left:15%;
     input{
     background: none!important;
     border:none !important;

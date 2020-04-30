@@ -23,6 +23,7 @@ var AUTHBASEURL = BASEURL + 'auth/';
 //                   }
 var general = {
               loadChat : BASEURL+'preload/',
+              getRooms : BASEURL+'getrooms/'
 }
 
 
@@ -34,13 +35,14 @@ export default new Vuex.Store({
     user : {
       username : null,
       key:null,
-      verified:false
+      verified:false,
     },
+  
    
     currentChatRoom: {
-        id:"1/",
-        totalUsers:"",
-        onlineUsers:"",
+      
+        name:'Campus chat room',
+        uri:'9601a4cff33949b',
     },
 
    AUTHBASEURL:AUTHBASEURL,
@@ -50,13 +52,14 @@ export default new Vuex.Store({
     logout : AUTHBASEURL + 'logout/',
     verify : AUTHBASEURL+'token/verify/'
         },
-   general : general,
     
+    general : general,
+ 
     
   },
   getters :{
     socketURL: state => {
-      return socketBase+state.currentChatRoom.id;
+      return socketBase+state.currentChatRoom.uri;
     }
   },
   mutations: {

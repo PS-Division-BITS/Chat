@@ -4,7 +4,7 @@
         <NAVBAR/>
     <div class="row container-fluid">
         <GOSSIPCARD
-            v-for="data in gossips"
+            v-for="data in rooms"
             :key="data.id"
             :data = data
          class="mt-2" />
@@ -20,14 +20,38 @@ import GOSSIPCARD from '../components/gossippage/gossipcard.vue'
 export default {
     data:function(){
         return {
-            gossips :[{'creator' : 'xyz','content' :'Only Single Girls come to A mess','count':45},{'creator' : 'ABC','content' :'Maths department is the horniest!','count':99}]
+            rooms :[{'creator' : 'xyz','content' :'AH3 Hostel','count':45, uri:'/das/'},{'creator' : 'ABC','content' :'Matheletes','count':99}]
         }
     },
     components : {
         NAVBAR,
         GOSSIPCARD
-    }
+    },
 
+    mounted()
+    {     
+    },
+    methods :{
+
+        getRooms(){
+           
+           var token = this.$store.state.user.key;
+            this.$axios({
+                method : 'get',
+                url : this.$store.state.general.getRooms+'?token='+token
+                
+            })
+            .then(response=>{
+                    response = response.data;
+                    console.log(response)
+            })
+            .catch(error=>{
+                console.log(error)
+              
+            })  
+        }
+
+    }
 }
 </script>
 
