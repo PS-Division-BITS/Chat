@@ -23,7 +23,7 @@ var AUTHBASEURL = BASEURL + 'auth/';
 //                   }
 var general = {
               loadChat : BASEURL+'preload/',
-              getRooms : BASEURL+'getrooms/'
+              getRooms : BASEURL+'get-rooms/'
 }
 
 

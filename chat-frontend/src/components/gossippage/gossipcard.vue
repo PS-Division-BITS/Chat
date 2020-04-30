@@ -1,15 +1,19 @@
 <template>
-<div class='col-md-4 offset-md-1 mt-3 border ' id="gossipcard">
+<div class='col-md-4 offset-md-1 mt-3' @click="goToRoom()" id="gossipcard">
    
-    <hr class="m-0 p-0">
-    <div id="content" class="text-left py-3">
-     {{data.content}}
+ 
+    <div id="content" class="text-left mt-1">
+     {{data.name}}
     </div>
-     <div id="started" class="text-left py-1"> Created by : <code>{{data.creator}} </code> 
+    <div v-if="data.description" id="description" class="text-left text-secondary mb-1 m-0 p-0">
+          <span> dasdasdasda dasdas dsadadsASASs saSSAS SASAsAS AsASAs SA da</span>
+        </div>
+     <div v-if="data.creator" id="started" class="text-left "> Created by : <code>{{data.creator}} </code> 
     </div>
-    <div id="reaction" class="d-flex py-1">
-       <span class="border p-1 text-left" id="counter"> + {{count}} </span>
-           <span class="p-1 ml-auto" id="count" @click="!counted?count++:count--; counted = !counted" :class="{'text-success' : counted}" > +1 </span>
+    
+    <div v-if="data.count" id="reaction" class="d-flex py-1">
+       <span class=" p-1 text-left" id="counter"> + {{data.count}} </span>
+           <span class="p-1 ml-auto" id="count" @click="!counted?data.count++:data.count--; counted = !counted" :class="{'text-success' : counted}" > +1 </span>
     </div>
 
 </div>
@@ -24,16 +28,41 @@ export default {
     data :function(){
         return{
             counted :false,
-            count : this.data.count
+          
+        }
+    },
+    methods : {
+        goToRoom(){
+            this.$store.commit('updateChatRoom',this.data)
+            console.log('Chatroom updated'+this.data.name)
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
+
+
 #gossipcard 
 {
+   z-index:1;
+   background-color: rgba(161, 255, 206,.1);
+   border-radius: 15px 80px 5px 15px;
+   box-shadow: rgba(116, 214, 162, 0.4) 5px 2px 18px;
+   font-family: 'Comic Neue';
+}
+
+#gossipcard:hover {
+        font-size: 110%;
+        cursor: pointer;
+         box-shadow: rgba(116, 214, 162, 1) 5px 5px 5px;
    
+}
+
+#description{
+    line-height: 1;
+    font-style: italic;
+    font-size: 90%;
 }
 
 #started {
