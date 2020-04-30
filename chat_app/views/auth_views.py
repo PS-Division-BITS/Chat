@@ -16,7 +16,7 @@ from ..utils import (
     decode_jwt, get_jwt, verify_jwt,
 )
 from ..permissions import HasValidToken
-
+from ..models import Chat
 
 User = get_user_model()
 
@@ -100,6 +100,10 @@ class UnverifiedUserLoginView(APIView):
                 )
                 # loggin the new user to save credentials in session
                 login(request, user)
+                # adding user to campus chat
+                # FIXME: remove hard-coded path
+                chat = Chat.objects.get(uri='1')
+                chat.participants.add(user)
                 # getting the user IP
                 ip = get_user_ip(request)
                 token = get_jwt({'username': username, 'ip': ip})
@@ -123,12 +127,15 @@ class UnverifiedUserLoginView(APIView):
 
 
 class LogoutView(APIView):
-    permission_classes = [HasValidToken, permissions.IsAuthenticated]
+    permission_classes = [HasValidToken]
 
     def post(self ,request, *args, **kwargs):
-        username = request.POST['username']
+        token = request.POST['token']
+        payload = decode_jwt(token)
+        username = payload['username']
+        user = User.objects.get(username=username)
         # un-vreified user
-        if not self.request.user.userprofile.is_verified:
+        if not user.userprofile.is_verified:
             # call logout() to remove session data
             logout(request)
             try:
