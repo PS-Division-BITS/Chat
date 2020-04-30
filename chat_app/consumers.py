@@ -27,8 +27,6 @@ class ChatConsumer(WebsocketConsumer):
             )
 
             self.accept()
-        else:
-            self.close()
 
     def disconnect(self, close_code):
         # Leave room group
@@ -44,15 +42,14 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         token = text_data_json['token']
         payload = decode_jwt(token)
-        User = get_user_model()
-        sender = list(User.objects.filter(username=payload['username']).values('username'))
+        sender = User.objects.filter(username=payload['username']).values('username')
         message = text_data_json['message']
         # sends out an event to the group having name `self.room_group_name`
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'sender':  sender[0],
+                'sender':  sender[0]['username'],
                 'message': message
             }
         )
@@ -64,7 +61,7 @@ class ChatConsumer(WebsocketConsumer):
         # saving the message in Database
         author = User.objects.filter(username=sender)
         if author:
-            Message.objects.create(
+            msg = Message.objects.create(
                 author=author[0],
                 content=message
             )
@@ -72,7 +69,8 @@ class ChatConsumer(WebsocketConsumer):
             self.send(text_data=json.dumps(
                 {
                     'sender': sender,
-                    'message': message
+                    'message': message,
+                    'timestamp': msg.create_date
                 }
             ))
         else:
