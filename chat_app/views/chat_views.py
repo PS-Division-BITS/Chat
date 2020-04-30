@@ -54,11 +54,8 @@ class GetChatRooms(APIView):
             payload = decode_jwt(request.GET['token'])
             user = User.objects.get(username=payload['username'])
             chats = Chat.objects.filter(participants=user)
-            serializer = ChatSerializer(data=list(chats), many=True)
-            if serializer.is_valid():
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                return Response(serializer.errors)
+            serializer = ChatSerializer(chats, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except MultiValueDictKeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
