@@ -116,7 +116,10 @@ class UnverifiedUserLoginView(APIView):
                     print(e)
                 return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                data={'error': True, 'message': 'User already exists!'},
+                status=status.HTTP_400_BAD_REQUEST
+                )
 
 
 class LogoutView(APIView):

@@ -19,6 +19,7 @@ urlpatterns += [
 urlpatterns += [
     path('preload/', chat_views.PreloadMessages.as_view()),
     path('user/verify/', chat_views.VerifyUsername.as_view()),
+    path('get-rooms/', chat_views.GetChatRooms.as_view()),
 ]
 
 # only for debugging while using browsable rest-api

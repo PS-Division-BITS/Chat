@@ -40,13 +40,7 @@ class Message(TrackableDateModel):
     author = models.ForeignKey(
         User, related_name='user_messages', on_delete=models.CASCADE
     )
-    content = models.TextField()
-
-    @classmethod
-    def last_50_messages(cls):
-        return Message.objects.order_by('-create_date').values(
-            'author', 'content', 'create_date'
-        )[:50]
+    content = models.CharField(max_length=55)
 
 
 def _generate_unique_uri():
@@ -56,13 +50,20 @@ def _generate_unique_uri():
 
 class Chat(TrackableDateModel):
     "Model for Generic/Group Chat"
-    uri = models.CharField(default=_generate_unique_uri, max_length=20)
+    uri = models.CharField(
+        default=_generate_unique_uri, max_length=20, primary_key=True,
+        )
+    name = models.CharField(max_length=15)
+    description = models.CharField(max_length=50)
     messages = models.ManyToManyField(
-        Message, related_name='chat_messages', blank=True,
+        Message, related_name='chat', blank=True,
     )
     participants = models.ManyToManyField(
         User, related_name='user_chats',
     )
+
+    def get_last_50_messages(self):
+        return Message.objects.filter(chat=self).order_by('-create_date')
 
 
 class OnetoOneChat(Chat):
