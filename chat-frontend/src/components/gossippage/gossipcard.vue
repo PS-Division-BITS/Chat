@@ -1,12 +1,12 @@
 <template>
-<div class='col-md-4 offset-md-1 mt-3' @click="goToRoom()" id="gossipcard">
+<div class='col-md-4 offset-md-1 px-3 mt-3' @click="goToRoom()" id="gossipcard">
    
  
-    <div id="content" class="text-left mt-1">
+    <div id="content" class="text-left h3 ">
      {{data.name}}
     </div>
     <div v-if="data.description" id="description" class="text-left text-secondary mb-1 m-0 p-0">
-          <span> dasdasdasda dasdas dsadadsASASs saSSAS SASAsAS AsASAs SA da</span>
+          <span>{{data.description}}</span>
         </div>
      <div v-if="data.creator" id="started" class="text-left "> Created by : <code>{{data.creator}} </code> 
     </div>
@@ -35,6 +35,7 @@ export default {
         goToRoom(){
             this.$store.commit('updateChatRoom',this.data)
             console.log('Chatroom updated'+this.data.name)
+            this.$router.push({name:'Homepage'})
         }
     }
 }

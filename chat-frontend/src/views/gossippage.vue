@@ -44,6 +44,7 @@ export default {
             })
             .then(response=>{
                     response = response.data;
+                    this.rooms=response;
                     console.log(response,"rooms")
             })
             .catch(error=>{
