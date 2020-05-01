@@ -5,10 +5,12 @@ from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.reverse import  reverse
-from rest_framework.views import  APIView
 from rest_framework.response import  Response
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
+from rest_framework.views import  APIView
 
 from ..models import Chat, Message
+from ..permissions import HasValidToken
 from ..serializers import ChatSerializer, MessageSerializer
 from ..utils import decode_jwt
 
@@ -18,9 +20,12 @@ User = get_user_model()
 
 class PreloadMessages(APIView):
     "Returns a list of last 50 or less messages"
+
+    permission_classes = [HasValidToken, ]
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
     def get(self, request, format=None):
         try:
-            print(request.GET['uri'])
             chat = Chat.objects.filter(uri=request.GET['uri'])
         except MultiValueDictKeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -34,6 +39,9 @@ class PreloadMessages(APIView):
 
 class VerifyUsername(APIView):
     "Checks if a username already exists in Database"
+
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
     def get(self, request):
         try:
             verified = User.objects.filter(
@@ -49,6 +57,10 @@ class VerifyUsername(APIView):
 
 class GetChatRooms(APIView):
     "Returns the details of all the rooms the user is part of"
+
+    permission_classes = [HasValidToken, ]
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
     def get(self, request):
         try:
             payload = decode_jwt(request.GET['token'])

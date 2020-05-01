@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import permissions, status
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import  APIView
 
 from ..utils import (
@@ -30,6 +31,8 @@ def get_user_ip(request):
 
 
 class UserRegisterView(APIView):
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
     def post(self, request, *args, **kwargs):
         try:
             username = request.POST['username']
@@ -60,6 +63,8 @@ class UserRegisterView(APIView):
 
 
 class VerifiedUserLoginView(APIView):
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
     def post(self, request):
         try:
             # authenticate the user
@@ -88,6 +93,8 @@ class VerifiedUserLoginView(APIView):
 
 
 class UnverifiedUserLoginView(APIView):
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
     def post(self, request):
         username = request.POST['username']
         if not User.objects.filter(username=username).exists():
@@ -127,7 +134,8 @@ class UnverifiedUserLoginView(APIView):
 
 
 class LogoutView(APIView):
-    permission_classes = [HasValidToken]
+    permission_classes = [HasValidToken, ]
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
     def post(self ,request, *args, **kwargs):
         token = request.POST['token']
@@ -164,6 +172,7 @@ class LogoutView(APIView):
 
 
 @csrf_exempt
+@throttle_classes([AnonRateThrottle, UserRateThrottle])
 def verify_token(request):
     if request.method == 'POST':
         username = request.POST['username']
