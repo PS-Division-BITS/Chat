@@ -65,6 +65,8 @@ class ChatConsumer(WebsocketConsumer):
                 author=author[0],
                 content=message
             )
+            # add msg to related chat
+            msg.chat.add(Chat.objects.get(uri=self.room_name))
             timestamp = json.dumps(
                 msg.create_date, indent=4,sort_keys=True, default=str
             )

@@ -14,7 +14,7 @@ class Command(BaseCommand):
         print('admin created.')
         print('username: admin  password: qwerty@chat')
         print('Creating Ghost user..')
-        User.objects.create_user(username='Ghost', password=get_random_string(8),)
+        g = User.objects.create_user(username='Ghost', password=get_random_string(8),)
         print('done.')
 
         print('Creating other users..')
@@ -41,9 +41,9 @@ class Command(BaseCommand):
 
         # add users to chats
         print('winding up..')
-        c1.participants.add(admin, u1, u2, u3)
-        c2.participants.add(admin, u1)
-        c3.participants.add(admin, u2, u3)
+        c1.participants.add(admin, u1, u2, u3, g)
+        c2.participants.add(admin, u1, g)
+        c3.participants.add(admin, u2, u3, g)
 
         # add msgs in chats
         c1.messages.add(m1, m2)
