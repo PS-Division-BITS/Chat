@@ -8,6 +8,11 @@ from uuid import uuid4
 
 User = get_user_model()
 
+def get_username(self):
+    return self.username
+
+User.add_to_class('__str__', get_username)
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -63,7 +68,7 @@ class Chat(TrackableDateModel):
     )
 
     def get_last_50_messages(self):
-        return Message.objects.filter(chat=self).order_by('-create_date')
+        return Message.objects.filter(chat=self).order_by('create_date')
 
 
 class OnetoOneChat(Chat):
