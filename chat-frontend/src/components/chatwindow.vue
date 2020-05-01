@@ -126,7 +126,10 @@ export default {
                 
             })
             .then(response=>{
-                    response = response.data;
+                    response = response.data; 
+                    var r;  
+                    for (r in response)
+                    response[r].time = response[r].timestamp.substr(12,5)
                     this.chat = response;
                     console.log(response,"preloaded chat")
             })
