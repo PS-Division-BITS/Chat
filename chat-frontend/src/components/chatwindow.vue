@@ -195,7 +195,7 @@ export default {
                 var container = this.$el.querySelector("#messagesBox"); 
                 if(this.username !== messageData.sender || (container.scrollHeight) - container.scrollTop  > 600 )
                 {   
-                messageData.time = messageData.timestamp.substr(12,5)
+                
                 var audio = new Audio(require('@/assets/new message.mp3'));
                 document.title = "New Message @ "+messageData.sender
                  audio.play();
@@ -212,7 +212,7 @@ export default {
                 //     });
                 // }
                 
-
+                messageData.time = messageData.timestamp.substr(12,5)
                 this.chat.push(messageData);
                 
         },
