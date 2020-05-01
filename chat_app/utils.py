@@ -28,3 +28,6 @@ def is_reserved_username(username):
         if reserved.casefold() == username.casefold():
             return True
     return False
+
+def get_ghost_user():
+    return User.objects.get(username='Ghost')

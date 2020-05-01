@@ -15,10 +15,10 @@ from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import  APIView
 
 from ..utils import (
-    decode_jwt, get_jwt, verify_jwt,
+    decode_jwt, get_ghost_user, get_jwt, verify_jwt,
 )
 from ..permissions import IsNotReservedUserName
-from ..models import Chat
+from ..models import Chat, Message
 
 User = get_user_model()
 
@@ -154,9 +154,15 @@ class LogoutView(APIView):
             # call logout() to remove session data
             logout(request)
             try:
-                # deleting the user to free up username
-                User.objects.filter(username=username).delete()
-                # logout current user
+                user = User.objects.get(username=username)
+                # marking user msgs as Ghosted-msg
+                ghost_user = get_ghost_user()
+                user_msgs = user.user_messages.all()
+                for msg in user_msgs:
+                    msg.author = ghost_user
+                    msg.save()
+                # deleting user instance
+                user.delete()
                 return Response(
                     data={'username': username,},
                     status=status.HTTP_204_NO_CONTENT

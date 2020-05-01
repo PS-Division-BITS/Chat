@@ -10,12 +10,12 @@ class Command(BaseCommand):
         # creating user and super-user
         User.objects.all().delete()
         print('Creating admin..')
-        admin = User.objects.create_user(username='admin', password='qwerty@chat')
-        admin.is_superuser = True
-        admin.is_staff = True
-        admin.save()
+        admin = User.objects.create_superuser(username='admin', password='qwerty@chat')
         print('admin created.')
         print('username: admin  password: qwerty@chat')
+        print('Creating Ghost user..')
+        User.objects.create_user(username='Ghost', password=get_random_string(8),)
+        print('done.')
 
         print('Creating other users..')
         u1 = User.objects.create_user(username='Ritik', password=get_random_string(8))
