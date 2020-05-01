@@ -3,9 +3,9 @@ import Vuex from 'vuex'
 
 
 Vue.use(Vuex)
-
-const socketBase = "ws://127.0.0.1:8000/ws/chat/";
-const BASEURL = "http://127.0.0.1:8000/chat/";
+const ip = "127.0.0.1";
+const socketBase = "ws://"+ip+":8000/ws/chat/";
+const BASEURL = "http://"+ip+":8000/chat/";
 
 var AUTHBASEURL = BASEURL + 'auth/';
 
@@ -42,18 +42,20 @@ export default new Vuex.Store({
     currentChatRoom: {
       
         name:'Campus chat room',
-        uri:'9601a4cff33949b',
+        uri:'1',
     },
-
-   AUTHBASEURL:AUTHBASEURL,
+    
+    error:false,
+    errorMessage:"Error connecting to the server",
 
    URLS : { 
     login : AUTHBASEURL +'temp-login/',
     logout : AUTHBASEURL + 'logout/',
-    verify : AUTHBASEURL+'token/verify/'
+    verify : AUTHBASEURL+'token/verify/',
+    general :general
         },
     
-    general : general,
+  
  
     
   },
@@ -72,6 +74,11 @@ export default new Vuex.Store({
       state.user = user;
    
     },
+    error (state,bl,msg)
+    {
+      state.error=bl;
+      state.errorMessage=msg;
+    }
 
   },
   actions: {

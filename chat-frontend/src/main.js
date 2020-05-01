@@ -8,6 +8,10 @@ import store from './store'
 import router from './router'
 Vue.config.productionTip = false
 
+import SequentialEntrance from 'vue-sequential-entrance'
+import 'vue-sequential-entrance/vue-sequential-entrance.css'
+Vue.use(SequentialEntrance);
+
 //import VueEvents from 'vue-events' // to be uninstalled
 // import VueSocketIO from 'vue-socket.io'
 // import SocketIO from "socket.io-client"

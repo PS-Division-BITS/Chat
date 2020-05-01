@@ -1,5 +1,6 @@
 <template>
     <div id="chatwindow" class="container-fluid m-0 p-0 ">
+         
         <div class="py-3" id="onlineUsers">
             <div class="">  Online users</div>
             <span class="text-secondary">Beta</span>
@@ -30,7 +31,7 @@
                  
                         <div id="wrapperInside" class=" container-fluid py-1 m-0 p-0 ">
                         
-                                <div id="messageInfo"  :class="{'notification': data.type === 'notification','sent': username === data.sender, 'recieved' : (username !== data.sender && data.type !== 'notification')}">   
+                                <div id="messageInfo"  :class="{'notification': data.type === 'notification','sent': data.sender&& username === data.sender, 'recieved' : (data.sender && username !== data.sender) }">   
                                 
                                     <span id="sender">
                                         {{data.sender}}
@@ -40,7 +41,7 @@
 
                                             </span>
                                                 <!-- timespan display -->
-                                            <span v-if="data.type !== 'notification'" class="text-secondary mx-2" :style="data.sender === username ? 'float:left;':'float:right'">00:00
+                                            <span v-if="data.type !== 'notification'" class="text-secondary mx-2" :style="data.sender === username ? 'float:left;':'float:right'">{{data.time}}
                                                 
                                             </span>
                                         
@@ -71,6 +72,7 @@
             </div>
 
         </div>
+      
     </div>
 </template>
 
@@ -94,12 +96,13 @@ export default {
                     
 
             ],
-            chatSocket: new WebSocket(this.$store.getters.socketURL),
+            chatSocket: WebSocket,
             chatRoom : this.$store.state.currentChatRoom
         }
     },
     mounted: function(){
 
+                this.loadChat()
                 this.setupConnection()
                 this.scrollBottom()
                 
@@ -107,11 +110,35 @@ export default {
                    
                     this.messageReceived(JSON.parse(m.data))
                 }
+                
+                this.chatSocket.onclose = function() {
+                    this.chatSocket=null;
+                    console.log('retrying connection...')
+                    setTimeout(this.setupConnection(),5000)
+                }
     },
     methods:{
-        
+        loadChat()
+        {
+             this.$axios({
+                method : 'get',
+                url : this.$store.state.URLS.general.loadChat+'?uri='+this.$store.state.currentChatRoom.uri
+                
+            })
+            .then(response=>{
+                    response = response.data;
+                    this.chat = response;
+                    console.log(response,"preloaded chat")
+            })
+            .catch(error=>{
+                console.log(error)
+              
+            })  
+        },
+
         setupConnection()
         {
+                       this.chatSocket= new WebSocket(this.$store.getters.socketURL)
              //Establishing Connection
                 try {
                         this.chatSocket.onopen = () => {
@@ -141,7 +168,7 @@ export default {
                    }
                    else {
                        console.log('Socket closed, please refresh!')
-                        this.chat.push({sender:this.username,message:this.message}) //dev
+                       // this.chat.push({sender:this.username,message:this.message}) //dev
                    }
 
                    
@@ -164,9 +191,10 @@ export default {
         
         messageReceived(messageData){
                 
-             
-                console.log("Web socket response : "+messageData.sender)
-                messageData.sender = messageData.sender['username'];
+
+                console.log("Sender: "+messageData.sender+" Message : "+messageData.message)
+                messageData.time = messageData.timestamp.substr(12,5)
+                console.log('time : '+messageData.time)
                 this.chat.push(messageData);
         },
 

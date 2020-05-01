@@ -1,8 +1,9 @@
 <template>
+
     <div class="m-0 p-1 bg-light container-fluid" id="gossippage">
-        
+        <sequential-entrance delay="500">
         <NAVBAR/>
-    <div class="row container-fluid">
+    <div class="row container-fluid d-flex justify-content-lg-between">
         <GOSSIPCARD
             v-for="data in rooms"
             :key="data.id"
@@ -10,8 +11,9 @@
          class="mt-2" />
     </div>
 
-
+</sequential-entrance>
     </div>
+
 </template>
 
 <script>
@@ -20,7 +22,7 @@ import GOSSIPCARD from '../components/gossippage/gossipcard.vue'
 export default {
     data:function(){
         return {
-            rooms :[{'creator' : 'xyz','name' :'AH3 Hostel','count':45, uri:'/das/'},{'creator' : 'ABC','name' :'Matheletes','count':99}]
+            rooms :[{'creator' : 'xyz',description:'Timepassdsadasdsadasdasdasdadasddadsad','name' :'AH3 Hostel','count':45, uri:'/das/',users:['1','2','3','4','5']},{'creator' : 'creator',description:"description",'name' :'name','count':'count', uri:'uri',users:'[dsadsaadadasda]'}]
         }
     },
     components : {
@@ -39,12 +41,14 @@ export default {
            var token = this.$store.state.user.key;
             this.$axios({
                 method : 'get',
-                url : this.$store.state.general.getRooms+'?token='+token
+                url : this.$store.state.URLS.general.getRooms+'?token='+token
                 
             })
             .then(response=>{
                     response = response.data;
-                    this.rooms=response;
+                    var res;
+                    for (res in response)
+                      this.rooms.push(response[res]);
                     console.log(response,"rooms")
             })
             .catch(error=>{

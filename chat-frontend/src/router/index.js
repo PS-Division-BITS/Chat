@@ -5,6 +5,7 @@ import Homepage from '../views/homepage.vue'
 import Gossippage from '../views/gossippage.vue'
 import Logoutpage from '../views/logoutpage.vue'
 import Register from '../views/register.vue'
+import Matchpage from '../views/matchpage.vue'
 
 import store from '../store'
 import axios from  'axios'
@@ -47,6 +48,11 @@ const routes = [
     path :'/register',
     component: Register,
     name : 'Register'
+  },
+  {
+    path :'/match',
+    component:Matchpage,
+    name : 'Match'
   }
  
 ]

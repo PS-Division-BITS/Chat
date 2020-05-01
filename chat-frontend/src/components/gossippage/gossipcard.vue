@@ -2,18 +2,27 @@
 <div class='col-md-4 offset-md-1 px-3 mt-3' @click="goToRoom()" id="gossipcard">
    
  
-    <div id="content" class="text-left h3 ">
+    <div id="content" class=" ">
      {{data.name}}
     </div>
-    <div v-if="data.description" id="description" class="text-left text-secondary mb-1 m-0 p-0">
-          <span>{{data.description}}</span>
+    <div  id="description" class=" container-fluid d-flex justify-content-around text-secondary mb-1 m-0 p-0">
+         
+           <span v-if="data.description" class="w-50">{{data.description}}</span>
+             <span v-if="data.creator" id="started" class="text-right w-50 "> Created by : <code>{{data.creator}} </code> 
+             </span>
+        
         </div>
-     <div v-if="data.creator" id="started" class="text-left "> Created by : <code>{{data.creator}} </code> 
-    </div>
+   
+    <!-- <div v-if="data.users" class="" >
+      
+        Online users : 
+        <span class="mx-1 w-50" v-for="user in data.users" :key="user"><img height="25px" width="25px" src="@/assets/profile-icon.png"></span>
     
+    </div> -->
+
     <div v-if="data.count" id="reaction" class="d-flex py-1">
-       <span class=" p-1 text-left" id="counter"> + {{data.count}} </span>
-           <span class="p-1 ml-auto" id="count" @click="!counted?data.count++:data.count--; counted = !counted" :class="{'text-success' : counted}" > +1 </span>
+       <span class=" " id="counter"> + {{data.count}} </span>
+           <span class="ml-auto" id="count" @click="!counted?data.count++:data.count--; counted = !counted" :class="{'text-success' : counted}" > +1 </span>
     </div>
 
 </div>
@@ -44,20 +53,28 @@ export default {
 <style lang="scss" scoped>
 
 
+
 #gossipcard 
 {
    z-index:1;
    background-color: rgba(161, 255, 206,.1);
-   border-radius: 15px 80px 5px 15px;
+   border-radius: 55px 5px 15px 0px;
    box-shadow: rgba(116, 214, 162, 0.4) 5px 2px 18px;
    font-family: 'Comic Neue';
+   min-height:100px;
 }
 
 #gossipcard:hover {
-        font-size: 110%;
+        font-size: 105%;
         cursor: pointer;
          box-shadow: rgba(116, 214, 162, 1) 5px 5px 5px;
+         padding-bottom: 15px !important;
    
+}
+span{
+white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #description{
@@ -76,8 +93,9 @@ export default {
 }
 
 #content {
-    line-height: 150%;
+   font-size:2em;
     height:auto;
+
 }
 
 #counter {
