@@ -17,7 +17,7 @@ from rest_framework.views import  APIView
 from ..utils import (
     decode_jwt, get_jwt, verify_jwt,
 )
-from ..permissions import HasValidToken
+from ..permissions import IsNotReservedUserName
 from ..models import Chat
 
 User = get_user_model()
@@ -32,18 +32,13 @@ def get_user_ip(request):
 
 
 class UserRegisterView(APIView):
+    authentication_classes = []
+    permission_classes = [IsNotReservedUserName, ]
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
     def post(self, request, *args, **kwargs):
         try:
             username = request.POST['username']
-            if username in settings.RESERVED_USERNAMES:
-                return Response(
-                    {
-                        'error': True,
-                        'message': 'Cannot select from reserved usernames!'
-                    }, status=status.HTTP_400_BAD_REQUEST
-                )
             password = request.POST['password']
             email = request.POST['email']
             user = User.objects.create_user(
@@ -71,6 +66,8 @@ class UserRegisterView(APIView):
 
 
 class VerifiedUserLoginView(APIView):
+    authentication_classes = []
+    permission_classes = [IsNotReservedUserName, ]
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
     def post(self, request):
@@ -101,17 +98,12 @@ class VerifiedUserLoginView(APIView):
 
 
 class UnverifiedUserLoginView(APIView):
+    authentication_classes = []
+    permission_classes = [IsNotReservedUserName, ]
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
     def post(self, request):
         username = request.POST['username']
-        if username in settings.RESERVED_USERNAMES:
-            return Response(
-                {
-                    'error': True,
-                    'message': 'Cannot select from reserved usernames!'
-                }, status=status.HTTP_400_BAD_REQUEST
-            )
         if not User.objects.filter(username=username).exists():
             try:
                 # creating new user with random password
@@ -149,7 +141,7 @@ class UnverifiedUserLoginView(APIView):
 
 
 class LogoutView(APIView):
-    permission_classes = [HasValidToken, ]
+    authentication_classes = []
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
     def post(self ,request, *args, **kwargs):

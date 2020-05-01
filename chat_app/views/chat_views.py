@@ -8,7 +8,6 @@ from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import  APIView
 
 from ..models import Chat, Message
-from ..permissions import HasValidToken
 from ..serializers import ChatSerializer, MessageSerializer
 from ..utils import decode_jwt
 
@@ -19,7 +18,6 @@ User = get_user_model()
 class PreloadMessages(APIView):
     "Returns a list of last 50 or less messages"
 
-    permission_classes = [HasValidToken, ]
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
     def get(self, request, format=None):
@@ -53,7 +51,6 @@ class VerifyUsername(APIView):
 class GetChatRooms(APIView):
     "Returns the details of all the rooms the user is part of"
 
-    permission_classes = [HasValidToken, ]
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
     def get(self, request):
