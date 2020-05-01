@@ -29,7 +29,7 @@
              
                 <div v-for="data in chat" :key="data.id" class="m-0 p-0 container-fluid " >
                  
-                        <div id="wrapperInside" class=" container-fluid py-1 m-0 p-0 ">
+                        <div id="wrapperInside" class=" container-fluid py-1 m-0 p-0 pr-1">
                         
                                 <div id="messageInfo"  :class="{'notification': data.type === 'notification','sent': data.sender&& username === data.sender, 'recieved' : (data.sender && username !== data.sender) }">   
                                 
@@ -397,7 +397,7 @@ padding: 3px 4px 3px 4px ;
     text-align: right;
     float:right;
     margin-left: auto;
-     
+   
     box-shadow:darkgray 2px 3px;
      border-radius: 18px 0px 5px 5px;
     background-color:rgba(234, 240, 250, 0.4);
