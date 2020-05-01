@@ -5,9 +5,12 @@ from .models import Chat, Message
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    message = serializers.CharField(source='content')
+    timestamp = serializers.DateTimeField(source='create_date')
+
     class Meta:
         model = Message
-        fields = ['author', 'content', 'create_date']
+        fields = ['sender', 'message', 'timestamp']
 
 
 class ChatSerializer(serializers.ModelSerializer):

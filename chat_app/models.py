@@ -37,7 +37,7 @@ class TrackableDateModel(models.Model):
 
 class Message(TrackableDateModel):
     "Model to store messages"
-    author = models.ForeignKey(
+    sender = models.ForeignKey(
         User, related_name='user_messages', on_delete=models.DO_NOTHING
     )
     content = models.CharField(max_length=55)

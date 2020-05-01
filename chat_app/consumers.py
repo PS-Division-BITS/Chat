@@ -50,7 +50,8 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type': 'chat_message',
                 'sender':  sender[0]['username'],
-                'message': message
+                'message': message,
+                'sender_channel_name': self.room_group_name
             }
         )
 
@@ -59,10 +60,10 @@ class ChatConsumer(WebsocketConsumer):
         sender = event['sender']
         message = event['message']
         # saving the message in Database
-        author = User.objects.filter(username=sender)
-        if author:
+        sender_obj = User.objects.filter(username=sender)
+        if sender:
             msg = Message.objects.create(
-                author=author[0],
+                sender=sender_obj[0],
                 content=message
             )
             # add msg to related chat
@@ -78,5 +79,3 @@ class ChatConsumer(WebsocketConsumer):
                     'timestamp': timestamp
                 }
             ))
-        else:
-            self.close()

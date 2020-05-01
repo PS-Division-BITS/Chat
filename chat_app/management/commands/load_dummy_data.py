@@ -34,9 +34,9 @@ class Command(BaseCommand):
         # create msgs
         Message.objects.all().delete()
         print('Creating messages..')
-        m1 = Message.objects.create(author=admin, content='Hello World!')
-        m2 = Message.objects.create(author=admin, content='Foo Bar')
-        m3 = Message.objects.create(author=admin, content='Wazz Buzz')
+        m1 = Message.objects.create(sender=admin, content='Hello World!')
+        m2 = Message.objects.create(sender=admin, content='Foo Bar')
+        m3 = Message.objects.create(sender=admin, content='Wazz Buzz')
         print('done.')
 
         # add users to chats

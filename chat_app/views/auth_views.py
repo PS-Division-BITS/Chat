@@ -159,7 +159,7 @@ class LogoutView(APIView):
                 ghost_user = get_ghost_user()
                 user_msgs = user.user_messages.all()
                 for msg in user_msgs:
-                    msg.author = ghost_user
+                    msg.sender = ghost_user
                     msg.save()
                 # deleting user instance
                 user.delete()
