@@ -61,7 +61,7 @@
             </div>
 
 
-            <div id="sendBox" @click="scrollBottom()"  class="input-group d-flex container-fluid align-content-end m-0 py-2  ">
+            <div id="sendBox" @click="scrollBottom(true)"  class="input-group d-flex container-fluid align-content-end m-0 py-2  ">
                    
                     <input id="message" maxlength="100"  type="text" v-model="message" @keyup.enter="sendMessage()" class="form-control" placeholder="Enter Text Message ...">
                     <span class="input-group-btn">
@@ -104,7 +104,7 @@ export default {
 
                 this.loadChat()
                 this.setupConnection()
-                this.scrollBottom()
+                this.scrollBottom(false)
                 
                 this.chatSocket.onmessage = (m)=>{
                    
@@ -137,7 +137,8 @@ export default {
         },
 
         setupConnection()
-        {
+        {               
+                        this.chatSocket=null;
                        this.chatSocket= new WebSocket(this.$store.getters.socketURL)
              //Establishing Connection
                 try {
@@ -183,7 +184,7 @@ export default {
                 
             }
 
-            this.scrollBottom();
+            this.scrollBottom(true);
            // document.getElementById("message").blur();
             
         },
@@ -191,26 +192,50 @@ export default {
         
         messageReceived(messageData){
                 
-
-                console.log("Sender: "+messageData.sender+" Message : "+messageData.message)
+                var container = this.$el.querySelector("#messagesBox"); 
+                if(this.username !== messageData.sender || (container.scrollHeight) - container.scrollTop  > 600 )
+                {   
                 messageData.time = messageData.timestamp.substr(12,5)
-                console.log('time : '+messageData.time)
+                var audio = new Audio(require('@/assets/new message.mp3'));
+                document.title = "New Message @ "+messageData.sender
+                 audio.play();
+                  setTimeout (function(){ document.title=this.$store.state.currentChatRoom.name;},5000)
+                }
+                // if (promise !== undefined) {
+                //     promise.then(function() {
+                        
+                //         // Autoplay started!
+                //     }).catch(error => {
+                //         console.log(error+"Audio error")
+                //         // Autoplay was prevented.
+                //         // Show a "Play" button so that user can start playback.
+                //     });
+                // }
+                
+
                 this.chat.push(messageData);
+                
         },
 
 
-         scrollBottom :function () {
+         scrollBottom :function (b) {
             
            
+           
             var container = this.$el.querySelector("#messagesBox"); 
-            container.scrollTop =  (container.scrollHeight + container.clientHeight);
-            container.scrollIntoView(false);
+             var x =container.scrollHeight - container.scrollTop -container.clientHeight
+            if(x<250 || b)
+                 container.scrollTop =  container.scrollHeight + container.clientHeight   ;
+           
+
+          //  container.scrollIntoView(false);
             //console.log('Scrolled to : '+container.scrollHeight)
            
         }
     },
     updated : function() {
-        this.scrollBottom()
+        
+        this.scrollBottom(false)
     }
     
 }

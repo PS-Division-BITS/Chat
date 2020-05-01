@@ -18,7 +18,10 @@ const routes = [
   {
     path: '/',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta : {
+      title : 'Login | Chat.bpgc'
+    }
   },
   {
     path: '/about',
@@ -26,33 +29,51 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    meta : {
+      title : 'About | Chat.bpgc'
+    }
   },
   {
     path : '/chat',
     component: Homepage,
-    name : 'Homepage'
+    name : 'Homepage',
+    meta : {
+      title : 'Chatroom | Chat.bpgc'
+    }
   },
   {
     path : '/rooms',
     component: Gossippage,
-    name :'Chatrooms'
+    name :'Chatrooms',
+    meta : {
+      title : 'Chatrooms | Chat.bpgc'
+    }
   },
   {
     path : '/logout',
     component : Logoutpage,
-    name : 'Logout'
+    name : 'Logout',
+    meta : {
+      title : 'Logout | Chat.bpgc'
+    }
   
   },
   {
     path :'/register',
     component: Register,
-    name : 'Register'
+    name : 'Register',
+    meta : {
+      title : 'Register | Chat.bpgc'
+    }
   },
   {
     path :'/match',
     component:Matchpage,
-    name : 'Match'
+    name : 'Match',
+    meta : {
+      title : 'Match | Chat.bpgc'
+    }
   }
  
 ]

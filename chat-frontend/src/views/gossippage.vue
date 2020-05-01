@@ -22,7 +22,7 @@ import GOSSIPCARD from '../components/gossippage/gossipcard.vue'
 export default {
     data:function(){
         return {
-            rooms :[{'creator' : 'xyz',description:'Timepassdsadasdsadasdasdasdadasddadsad','name' :'AH3 Hostel','count':45, uri:'/das/',users:['1','2','3','4','5']},{'creator' : 'creator',description:"description",'name' :'name','count':'count', uri:'uri',users:'[dsadsaadadasda]'}]
+            rooms :[],//[{'creator' : 'xyz',description:'Timepassdsadasdsadasdasdasdadasddadsad','name' :'AH3 Hostel','count':45, uri:'/das/',users:['1','2','3','4','5']},{'creator' : 'creator',description:"description",'name' :'name','count':'count', uri:'uri',users:'[dsadsaadadasda]'}]
         }
     },
     components : {
