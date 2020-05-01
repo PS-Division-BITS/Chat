@@ -9,6 +9,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import permissions, status
+from rest_framework.decorators import  api_view, throttle_classes
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import  APIView
@@ -171,17 +172,17 @@ class LogoutView(APIView):
             )
 
 
-@csrf_exempt
+@api_view(['POST'])
 @throttle_classes([AnonRateThrottle, UserRateThrottle])
 def verify_token(request):
     if request.method == 'POST':
         username = request.POST['username']
         token = request.POST['token']
         if verify_jwt(token, username):
-            return JsonResponse(
-                {'verified': True}, safe=False
+            return Response(
+                {'verified': True},
             )
         else:
-            return JsonResponse(
-                {'verified': False}, safe=False
+            return Response(
+                {'verified': False},
             )

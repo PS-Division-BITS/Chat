@@ -26,15 +26,12 @@ class PreloadMessages(APIView):
 
     def get(self, request, format=None):
         try:
-            chat = Chat.objects.filter(uri=request.GET['uri'])
+            chat = Chat.objects.filter(uri=request.GET['uri'])[0]
         except MultiValueDictKeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         msgs = chat.get_last_50_messages()
-        serializer = MessageSerializer(data=list(msgs), many=True)
-        if serializer.is_valid():
-            return Response(serializers.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors)
+        serializer = MessageSerializer(msgs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class VerifyUsername(APIView):
