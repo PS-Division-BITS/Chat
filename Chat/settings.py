@@ -161,3 +161,6 @@ else:
 
 # Accessing Django session cookies on cross-domains
 SESSION_COOKIE_SAMESITE = None
+
+# reserving standard usernames
+RESERVED_USERNAMES = ['admin', 'ghost',]

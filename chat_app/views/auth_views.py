@@ -37,6 +37,13 @@ class UserRegisterView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             username = request.POST['username']
+            if username in settings.RESERVED_USERNAMES:
+                return Response(
+                    {
+                        'error': True,
+                        'message': 'Cannot select from reserved usernames!'
+                    }, status=status.HTTP_400_BAD_REQUEST
+                )
             password = request.POST['password']
             email = request.POST['email']
             user = User.objects.create_user(
@@ -98,6 +105,13 @@ class UnverifiedUserLoginView(APIView):
 
     def post(self, request):
         username = request.POST['username']
+        if username in settings.RESERVED_USERNAMES:
+            return Response(
+                {
+                    'error': True,
+                    'message': 'Cannot select from reserved usernames!'
+                }, status=status.HTTP_400_BAD_REQUEST
+            )
         if not User.objects.filter(username=username).exists():
             try:
                 # creating new user with random password
