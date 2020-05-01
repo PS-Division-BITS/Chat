@@ -65,12 +65,15 @@ class ChatConsumer(WebsocketConsumer):
                 author=author[0],
                 content=message
             )
+            timestamp = json.dumps(
+                msg.create_date, indent=4,sort_keys=True, default=str
+            )
             # send message back to WebSocket
             self.send(text_data=json.dumps(
                 {
                     'sender': sender,
                     'message': message,
-                    'timestamp': msg.create_date
+                    'timestamp': timestamp
                 }
             ))
         else:
