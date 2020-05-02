@@ -2,12 +2,15 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core import serializers
 
+from rest_framework import serializers
+
 import json
 import jwt
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 
 from .models import Chat, Message
+from .serializers import MessageSerializer
 from .utils import decode_jwt
 
 
@@ -38,44 +41,51 @@ class ChatConsumer(WebsocketConsumer):
 
     # receive message from WebSocket
     def receive(self, text_data=None, bytes_data=None):
-        # request from websocket is received here
-        text_data_json = json.loads(text_data)
-        token = text_data_json['token']
-        payload = decode_jwt(token)
-        sender = User.objects.filter(username=payload['username']).values('username')
-        message = text_data_json['message']
-        # sends out an event to the group having name `self.room_group_name`
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'sender':  sender[0]['username'],
-                'message': message,
-                'sender_channel_name': self.room_group_name
-            }
-        )
-
-    # recieve message from room_group
-    def chat_message(self, event):
-        sender = event['sender']
-        message = event['message']
-        # saving the message in Database
-        sender_obj = User.objects.filter(username=sender)
-        if sender:
-            msg = Message.objects.create(
-                sender=sender_obj[0],
+        try:
+            # request from websocket is received here
+            text_data_json = json.loads(text_data)
+            token = text_data_json['token']
+            payload = decode_jwt(token)
+            sender_qs = User.objects.filter(username=payload['username'])
+            message = text_data_json['message']
+            # saving msg to database
+            new_msg =  Message.objects.create(
+                sender=sender_qs[0],
                 content=message
             )
-            # add msg to related chat
-            msg.chat.add(Chat.objects.get(uri=self.room_name))
-            timestamp = json.dumps(
-                msg.create_date, indent=4,sort_keys=True, default=str
-            )
-            # send message back to WebSocket
-            self.send(text_data=json.dumps(
+            new_msg.chat.add(Chat.objects.get(uri=self.room_name))
+            msg_serializer = MessageSerializer(new_msg)
+            timestamp = msg_serializer.data['timestamp']
+            # sends out an event to the group having name `self.room_group_name`
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
                 {
-                    'sender': sender,
+                    'type': 'chat_message',
+                    'sender':  sender_qs[0].username,
                     'message': message,
                     'timestamp': timestamp
                 }
-            ))
+            )
+        except Exception as e:
+            if settings.DEBUG:
+                print(e)
+            self.close()
+
+    # recieve message from room_group
+    def chat_message(self, event):
+        try:
+            sender = event['sender']
+            # saving the message in Database
+            if sender:
+                # send message back to WebSocket
+                self.send(text_data=json.dumps(
+                    {
+                        'sender': sender,
+                        'message': event['message'],
+                        'timestamp': event['timestamp']
+                    }
+                ))
+        except Exception as e:
+            if settings.DEBUG:
+                print(e)
+            self.close()
