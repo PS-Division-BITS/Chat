@@ -31,7 +31,7 @@
                  
                         <div id="wrapperInside" class=" container-fluid py-1 m-0 p-0 pr-1">
                         
-                                <div id="messageInfo"  :class="{'notification': data.type === 'notification','sent': data.sender&& username === data.sender, 'recieved' : (data.sender && username !== data.sender) }">   
+                                <div id="messageInfo"  class=" align-content-center" :class="{'notification': data.type === 'notification','sent': data.sender&& username === data.sender, 'recieved' : (data.sender && username !== data.sender) }">   
                                 
                                     <span id="sender">
                                         {{data.sender}}
@@ -63,7 +63,7 @@
 
             <div id="sendBox" @click="scrollBottom(true)"  class="input-group d-flex container-fluid align-content-end m-0 py-2  ">
                    
-                    <input id="message" maxlength="100"  type="text" v-model="message" @keyup.enter="sendMessage()" class="form-control" placeholder="Enter Text Message ...">
+                    <input ref="message" id="message" maxlength="100"  type="text" v-model="message" @keyup.enter="sendMessage()" class="form-control"  placeholder="Enter Text Message ...">
                     <span class="input-group-btn">
                         <button class="btn btn-light container" type="button"  @click="sendMessage()">
                             <img class="img img-fluid" src="@/assets/paper-plane-solid.svg"/>
@@ -104,8 +104,9 @@ export default {
 
                 this.loadChat()
                 this.setupConnection()
-                this.scrollBottom(false)
-                
+                this.$refs.message.focus();
+             
+               
                 this.chatSocket.onmessage = (m)=>{
                    
                     this.messageReceived(JSON.parse(m.data))
@@ -116,10 +117,12 @@ export default {
                     console.log('retrying connection...')
                     setTimeout(this.setupConnection(),5000)
                 }
+              
     },
     methods:{
         loadChat()
-        {
+        {   
+            var self =this;
              this.$axios({
                 method : 'get',
                 url : this.$store.state.URLS.general.loadChat+'?uri='+this.$store.state.currentChatRoom.uri
@@ -131,12 +134,25 @@ export default {
                     for (r in response)
                     response[r].time = response[r].timestamp.substr(12,5)
                     this.chat = response;
-                    console.log(response,"preloaded chat")
+                  
+                  
+                   
+            })
+            .then(function(){
+              
+                 self.scrollBottom(true);
+               
             })
             .catch(error=>{
                 console.log(error)
               
+            }) 
+            .finally(function(){
+               
             })  
+
+           
+            
         },
 
         setupConnection()
@@ -196,6 +212,7 @@ export default {
         messageReceived(messageData){
                 
                 var container = this.$el.querySelector("#messagesBox"); 
+               
                 if(this.username !== messageData.sender || (container.scrollHeight) - container.scrollTop  > 600 )
                 {   
                 
@@ -369,15 +386,20 @@ overflow-x: scroll;
 font-size: 80%;
 z-index: 1;
 max-width: 60%;
-
+min-width:30%;
 padding: 3px 4px 3px 4px ;
 
+#messageValue{
+    font-size:110%;
+}
 
         @media  only screen and (min-width: 992px) {
             max-width: 60%;
+            min-width: 10%;
              padding:2px 5px 1px 5px;
 
         }
+
 }
 
 .recieved {
@@ -388,7 +410,8 @@ padding: 3px 4px 3px 4px ;
     margin-left:0px;
     border-radius: 15px 18px 18px 5px;
       box-shadow:darkgray 2px 3px;
-    background-color:rgba(83, 147, 241, 0.2);
+      background-color: rgba(154,183,211,.6);
+   // background-color:rgba(83, 147, 241, 0.2);
     hr {
         margin-right: auto;
         
@@ -400,7 +423,7 @@ padding: 3px 4px 3px 4px ;
     text-align: right;
     float:right;
     margin-left: auto;
-   
+    
     box-shadow:darkgray 2px 3px;
      border-radius: 18px 0px 5px 5px;
     background-color:rgba(234, 240, 250, 0.4);
