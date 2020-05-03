@@ -46,11 +46,10 @@ class ChatConsumer(WebsocketConsumer):
             text_data_json = json.loads(text_data)
             token = text_data_json['token']
             payload = decode_jwt(token)
-            sender_qs = User.objects.filter(username=payload['username'])
             message = text_data_json['message']
             # saving msg to database
             new_msg =  Message.objects.create(
-                sender=sender_qs[0],
+                sender=payload['username'],
                 content=message
             )
             new_msg.chat.add(Chat.objects.get(uri=self.room_name))
@@ -61,7 +60,7 @@ class ChatConsumer(WebsocketConsumer):
                 self.room_group_name,
                 {
                     'type': 'chat_message',
-                    'sender':  sender_qs[0].username,
+                    'sender':  payload['username'],
                     'message': message,
                     'timestamp': timestamp
                 }
