@@ -31,7 +31,7 @@
                  
                         <div id="wrapperInside" class=" container-fluid py-1 m-0 p-0 pr-1">
                         
-                                <div id="messageInfo"  class=" align-content-center" :class="{'notification': data.type === 'notification','sent': data.sender&& username === data.sender, 'recieved' : (data.sender && username !== data.sender) }">   
+                                <div id="messageInfo"  class=" align-content-center" :class="{'notification': data.msg_type === 'notification','sent': data.sender&& username === data.sender, 'recieved' : (data.sender && username !== data.sender) }">   
                                 
                                     <span id="sender">
                                         {{data.sender}}
@@ -83,10 +83,10 @@ export default {
             username : this.$store.state.user.username,
             token : this.$store.state.user.key,
             message :"",
-            chat :[{'type':'notification','message':'Hii Guys, Welcome to chat.bpgc! Feel free to test this development version and report any issues directly at our git repo!'},
+            chat :[{'msg_type':'notification','message':'Hii Guys, Welcome to chat.bpgc! Feel free to test this development version and report any issues directly at our git repo!'},
                  {'sender':'admin','verified':true,'message':'777777777777777777777777777777777777777777777777777'},
                 {'sender':'ritiktaneja','verified':true,'message':'!  '},
-                 {'type':'notification','message':'! haina mast '},
+                 {'msg_type':'notification','message':'! haina mast '},
                  {'sender':'ritiktaneja','verified':true,'message':'!  '},
                  {'sender':"ritiktaneja",'verified':true,'message':'Hii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
                   {'sender':'ritiktaneja','verified':true,'message':'Hii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
