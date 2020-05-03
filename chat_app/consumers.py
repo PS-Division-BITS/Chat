@@ -20,16 +20,15 @@ User = get_user_model()
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
-        if Chat.objects.filter(uri=self.room_name).exists():
+        try:
+            self.room = Chat.objects.get(uri=self.room_name)
             self.room_group_name = 'chat_%s' % self.room_name
-
-            # Join room group
-            async_to_sync(self.channel_layer.group_add)(
-                self.room_group_name,
-                self.channel_name
-            )
-
+            self.active_rooms = set()
             self.accept()
+        except Exception as e:
+            if settings.DEBUG:
+                print(e)
+            self.close()
 
     def disconnect(self, close_code):
         # Leave room group
@@ -39,53 +38,125 @@ class ChatConsumer(WebsocketConsumer):
                 self.channel_name
             )
 
-    # receive message from WebSocket
-    def receive(self, text_data=None, bytes_data=None):
+    # receives json content from socket
+    # text data from json is already decoded here
+    def receive_json(self, content):
+        command = content.get('command', None)
+        print('ass', command)
         try:
-            # request from websocket is received here
-            text_data_json = json.loads(text_data)
-            token = text_data_json['token']
+            token = content['token']
             payload = decode_jwt(token)
-            message = text_data_json['message']
-            # saving msg to database
-            user = User.objects.get(username=payload['username'])
-            new_msg =  Message.objects.create(
-                sender=user,
-                content=message
-            )
-            new_msg.chat.add(Chat.objects.get(uri=self.room_name))
-            msg_serializer = MessageSerializer(new_msg)
-            timestamp = msg_serializer.data['timestamp']
-            # sends out an event to the group having name `self.room_group_name`
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'sender':  payload['username'],
-                    'message': message,
-                    'timestamp': timestamp
-                }
-            )
+            if command == 'join':
+                async_to_sync(self.join_room)(payload['username'])
+            elif command == 'leave':
+                async_to_sync(self.leave_room)(payload['username'])
+            elif command == 'send':
+                async_to_sync(self.send_room)(
+                    payload['username'], content['message']
+                )
         except Exception as e:
             if settings.DEBUG:
                 print(e)
             self.close()
 
-    # recieve message from room_group
+    def join_room(self, new_user):
+        # Adding user to Chat
+        self.room.participants.add(User.objects.get(username=new_user))
+        self.active_rooms.add(self.room_name)
+        # sending notification to other users
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'chat_join',
+                'new_user': new_user
+            }
+        )
+        # adding the user to the group
+        async_to_sync(self.channel_layer.group_add)(
+            self.room_group_name,
+            self.channel_name
+        )
+        # letting client know user has joined
+        async_to_sync(self.send_json)(
+                {
+                    'error': False,
+                    'meesage': 'success!',
+                    'room': self.room_name,
+                    'user': new_user
+                }
+            )
+
+    def chat_join(self, event):
+        "Notify other users"
+        async_to_sync(self.send_json)(
+            {
+                'msg_type': 'notification',
+                'message': f'{event["new_user"]} joined the chat'
+            }
+        )
+
+    def leave_room(self, user):
+        # removing user from Chat
+        self.room.participants.remove(User.objects.get(username=new_user))
+        self.active_rooms.discard(self.room_name)
+        # removing the user from the group
+        async_to_sync(self.channel_layer.group_discard)(
+            self.room_group_name,
+            self.channel_layer
+        )
+        # sending notification to other users
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'chat_join',
+                'new_user': new_user
+            }
+        )
+        # lettings the client know user has left
+        async_to_sync(self.send_json)(
+                {
+                    'error': False,
+                    'meesage': 'success!',
+                    'room': self.room_name,
+                    'user': new_user
+                }
+            )
+
+    def chat_leave(self, event):
+        "Notify other users"
+        async_to_sync(self.send_json)(
+            {
+                'msg_type': 'notification',
+                'message': f'{event["new_user"]} left the chat'
+            }
+        )
+
+    # send messages to users on the group
+    def send_room(self, user, meesage):
+        # saving message in DB
+        new_msg =  Message.objects.create(
+            sender=user,
+            content=message
+        )
+        new_msg.chat.add(self.room)
+        msg_serializer = MessageSerializer(new_msg)
+        timestamp = msg_serializer.data['timestamp']
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'sender':  user,
+                'message': message,
+                'timestamp': timestamp
+            }
+        )
+
     def chat_message(self, event):
-        try:
-            sender = event['sender']
-            # saving the message in Database
-            if sender:
-                # send message back to WebSocket
-                self.send(text_data=json.dumps(
-                    {
-                        'sender': sender,
-                        'message': event['message'],
-                        'timestamp': event['timestamp']
-                    }
-                ))
-        except Exception as e:
-            if settings.DEBUG:
-                print(e)
-            self.close()
+        "Distribute message to all users in group"
+        self.send(text_data=json.dumps(
+            {
+                'sender': sender,
+                'message': event['message'],
+                'timestamp': event['timestamp']
+            }
+        ))

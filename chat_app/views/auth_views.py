@@ -114,10 +114,6 @@ class UnverifiedUserLoginView(APIView):
                 )
                 # loggin the new user to save credentials in session
                 login(request, user)
-                # adding user to campus chat
-                # FIXME: remove hard-coded path
-                chat = Chat.objects.get(uri='1')
-                chat.participants.add(user)
                 # getting the user IP
                 ip = get_user_ip(request)
                 token = get_jwt({'username': username, 'ip': ip})
