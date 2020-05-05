@@ -40,7 +40,7 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data=None, byte_data=None):
         text_data_json = json.loads(text_data)
         command = text_data_json.get('command', None)
-        print(text_data_json)
+        print(command)
         try:
             token = text_data_json['token']
             payload = decode_jwt(token)
@@ -52,6 +52,8 @@ class ChatConsumer(WebsocketConsumer):
                 self.send_room(
                     payload['username'], text_data_json['message']
                 )
+            # elif command = 'list':
+            #     self.online_users_list()
         except Exception as e:
             if settings.DEBUG:
                 traceback.print_exc()
@@ -78,7 +80,7 @@ class ChatConsumer(WebsocketConsumer):
         async_to_sync(self.send(text_data=json.dumps(
                 {
                     'error': False,
-                    'meesage': 'success!',
+                    'message': 'success!',
                     'room': self.room_name,
                     'user': new_user
                 }
@@ -114,7 +116,7 @@ class ChatConsumer(WebsocketConsumer):
         async_to_sync(self.send(text_data=json.dumps(
                 {
                     'error': False,
-                    'meesage': 'success!',
+                    'message': 'success!',
                     'room': self.room_name,
                     'user': new_user
                 }
@@ -139,6 +141,7 @@ class ChatConsumer(WebsocketConsumer):
         new_msg.chat.add(self.room)
         msg_serializer = MessageSerializer(new_msg)
         timestamp = msg_serializer.data['timestamp']
+        print(username, message, self.room_group_name)
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
@@ -151,10 +154,10 @@ class ChatConsumer(WebsocketConsumer):
 
     def chat_message(self, event):
         "Distribute message to all users in group"
-        print(even)
+        print('dfdsf', event)
         self.send(text_data=json.dumps(
             {
-                'sender': sender,
+                'sender': event['sender'],
                 'message': event['message'],
                 'timestamp': event['timestamp']
             }
