@@ -48,6 +48,7 @@ export default {
             .then(response=>{
                     response = response.data;
                     var res;
+                    console.log('Roomlist'+response)
                     for (res in response)
                       this.rooms.push(response[res]);
                    

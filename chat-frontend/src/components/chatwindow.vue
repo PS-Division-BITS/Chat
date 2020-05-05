@@ -44,7 +44,7 @@
                                 <div id="messageInfo"  class="m-0 align-content-center" :class="{'notification': data.msg_type === 'notification','sent': data.sender&& username === data.sender, 'recieved' : (data.sender && username !== data.sender), 'ghost' : data.sender === 'Ghost' }">   
                                 
                                     <span  v-if="data.sender!==username" id="sender">
-                                        <span >{{data.sender}}
+                                        <span @click="onSenderClick(data.sender)" >{{data.sender}}
                                              <span v-if="data.verified" class="pl-2 verified">
                                             </span>
                                         </span>   
@@ -53,7 +53,7 @@
                                     </span>
                                     <span v-else>
                                               <span v-if="data.type !== 'notification'" class="text-secondary mx-2" :style="'float:left'">{{data.time}}   
-                                            </span>
+                                            </span> <br>
                                     </span>
         
                                     <hr style="width:10%" class="m-0 p-0">
@@ -152,6 +152,13 @@ export default {
               
     },
     methods:{
+        onSenderClick(sender){
+            if(sender !== 'Ghost')
+            this.message="@"+sender+" ";
+             this.$refs.message.focus();
+            
+        },
+
         loadChat()
         {   
             var self =this;
@@ -198,6 +205,9 @@ export default {
                          //   this.chatSocket.send(JSON.stringify({'message':'hello'}))
                         };
                         console.log('Connection Established!')
+                         if(this.chatSocket.readyState == this.chatSocket.OPEN)
+                         this.chatSocket.send(JSON.stringify({'token':this.token,"command":'join'}))
+    
                 }
                 catch(e){
                         console.log('Error Connecting to chat room with id : '+this.chatRoom.id)
@@ -215,8 +225,8 @@ export default {
                 try {
                    
                    if(this.chatSocket.readyState == this.chatSocket.OPEN)
-                   {    this.chatSocket.send(JSON.stringify({'token':this.token,'message':this.message}))
-                        console.log('Message Sent to the server');
+                   {  
+                         this.chatSocket.send(JSON.stringify({'token':this.token,'message':this.message,'command':'send'}))
                    }
                    else {
                        console.log('Socket closed, please refresh!')
