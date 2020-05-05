@@ -76,15 +76,6 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-        # letting client know user has joined
-        async_to_sync(self.send(text_data=json.dumps(
-                {
-                    'error': False,
-                    'message': 'success!',
-                    'room': self.room_name,
-                    'user': new_user
-                }
-            )))
 
     def chat_join(self, event):
         "Notify other users"
@@ -112,15 +103,6 @@ class ChatConsumer(WebsocketConsumer):
                 'new_user': new_user
             }
         )
-        # lettings the client know user has left
-        async_to_sync(self.send(text_data=json.dumps(
-                {
-                    'error': False,
-                    'message': 'success!',
-                    'room': self.room_name,
-                    'user': new_user
-                }
-            )))
 
     def chat_leave(self, event):
         "Notify other users"
