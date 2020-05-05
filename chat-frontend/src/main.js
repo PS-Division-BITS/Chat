@@ -8,7 +8,16 @@ import store from './store'
 import router from './router'
 Vue.config.productionTip = false
 
-
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faUserSecret,faVolumeUp, faVolumeMute, faWindowClose} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+ 
+library.add(faUserSecret)
+library.add(faVolumeUp)
+library.add(faVolumeMute)
+library.add(faWindowClose)
+ 
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 import VueSidebarMenu from 'vue-sidebar-menu'
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
@@ -18,6 +27,11 @@ Vue.use(VueSidebarMenu)
 import SequentialEntrance from 'vue-sequential-entrance'
 import 'vue-sequential-entrance/vue-sequential-entrance.css'
 Vue.use(SequentialEntrance);
+
+import Loading from 'vue-loading-overlay';
+// Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
+Vue.use(Loading)
 
 //import VueEvents from 'vue-events' // to be uninstalled
 // import VueSocketIO from 'vue-socket.io'

@@ -37,6 +37,10 @@ export default {
     methods :{
 
         getRooms(){
+                       let loader = this.$loading.show();
+                  
+                    
+                 
            
            var token = this.$store.state.user.key;
            var ref =this;
@@ -51,12 +55,18 @@ export default {
                     console.log('Roomlist'+response)
                     for (res in response)
                       this.rooms.push(response[res]);
+                        loader.hide();
+                         
+                       
                    
             })
             .catch(err=>{
 
                ref.$store.commit('error',true,"Username already Exists :"+err)
+                 loader.hide();
             })
+           
+         
         }
 
     }

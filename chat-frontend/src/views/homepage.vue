@@ -32,8 +32,8 @@ export default {
 
 #homepage {
   background: #FFEEEE;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right,grey, lightgrey);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right,#78d1d2, #cde4ad); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: -webkit-linear-gradient(tto right,#78d1d2, #cde4ad);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right,rgb(120, 209, 210), #cde4ad); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 //background: 	rgba(247,225,211,.4);
   position:fixed;
   height:100%;

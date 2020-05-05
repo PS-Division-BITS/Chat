@@ -34,7 +34,7 @@ export default {
             const params = new URLSearchParams();
             params.append('username',this.nick)
             const ref= this;
-
+            this.$loading.show();
             this.$axios({
                 method : 'post',
                 url : this.$store.state.URLS.login,
@@ -71,6 +71,10 @@ export default {
                         /* has to be moved to try block */ 
                         console.log(error)
                        ref.$store.commit('error',true,"Username already exists!")
+            })
+            .finally(f=>{
+                console.log(f)
+                this.$loading.hide()
             })
          }
     }

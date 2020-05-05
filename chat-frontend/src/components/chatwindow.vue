@@ -1,5 +1,5 @@
 <template>
-    <div id="chatwindow" class="container-fluid m-0 p-0 ">
+    <div id="chatwindow"  class="container-fluid m-0 p-0 ">
          
         <div class="py-3" id="onlineUsers">
             <div class="">  Online users</div>
@@ -28,10 +28,13 @@
        
        <div class="container-fluid m-0 p-0" id="wrapper">
            
-           <sidebar-menu id="sidebar" style="z-index:2;" :collapsed="true" :showOneChild="true" :widthCollapsed="'25px'" :relative="true" :hideToggle="false" :theme="'white-theme'" :menu="menu" >
+           <sidebar-menu id="sidebar" style="z-index:2; text-align:center !important;" :rtl="true" :collapsed="collapseUserDiv" :showOneChild="true" :width="'60%'" :widthCollapsed="'25px'" :relative="true" :hideToggle="false" :theme="'white-theme'" :menu="menu" >
 
               
-                  <span slot="toggle-icon">#</span>
+                  <span slot="toggle-icon">
+                        <font-awesome-icon  v-if="collapseUserDiv" :icon="['fas', 'user-secret']" />
+                       
+                  </span>
 
             </sidebar-menu>
         
@@ -72,18 +75,21 @@
 
 
             <div id="sendBox" @click="scrollBottom(true)"  class="input-group d-flex container-fluid align-content-end m-0 p-0   ">
-                     <span class="input-group-btn">
-                        <button class="btn btn-light container" type="button"  @click="sendMessage()">
-                           <img class="img img-fluid" src="@/assets/sound.svg"/>
+                      <div class="input-group">
+                     <span class="input-group-prepend">
+                        <button @click="muted=!muted" class="btn btn-light container" type="button" >
+                          <font-awesome-icon v-if="!muted"  :icon="['fas', 'volume-up']" />
+                           <font-awesome-icon v-if="muted" :icon="['fas', 'volume-mute']" />
                         </button>
                       </span>
-                     
+                   
                     <input ref="message" id="message" maxlength="100"  type="text" v-model="message" @keyup.enter="sendMessage()" class="form-control"  placeholder="Enter Text Message ...">
-                    <span class="input-group-btn">
+                    <span class="input-group-append">
                         <button class="btn btn-light container" type="button"  @click="sendMessage()">
                             <img class="img img-fluid" src="@/assets/paper-plane-solid.svg"/>
                         </button>
                       </span>
+                     </div>
             </div>
 
         </div>
@@ -129,18 +135,21 @@ export default {
                     }
                     ],
             chatSocket: WebSocket,
-            chatRoom : this.$store.state.currentChatRoom
+            chatRoom : this.$store.state.currentChatRoom,
+            muted:false,
+            collapseUserDiv:true,
         }
     },
     mounted: function(){
 
                 this.loadChat()
                 this.setupConnection()
+                
                 this.$refs.message.focus();
              
                
                 this.chatSocket.onmessage = (m)=>{
-                   
+                    
                     this.messageReceived(JSON.parse(m.data))
                 }
                 
@@ -162,6 +171,7 @@ export default {
         loadChat()
         {   
             var self =this;
+           let loader= this.$loading.show()
              this.$axios({
                 method : 'get',
                 url : this.$store.state.URLS.general.loadChat+'?uri='+this.$store.state.currentChatRoom.uri
@@ -180,15 +190,15 @@ export default {
             .then(function(){
               
                  self.scrollBottom(true);
+                 loader.hide()
                
             })
             .catch(error=>{
                 console.log(error)
+                loader.hide()
               
             }) 
-            .finally(function(){
-               
-            })  
+           
 
            
             
@@ -201,20 +211,21 @@ export default {
              //Establishing Connection
                 try {
                         this.chatSocket.onopen = () => {
-                           
-                         //   this.chatSocket.send(JSON.stringify({'message':'hello'}))
+                          
                         };
-                        console.log('Connection Established!')
-                         if(this.chatSocket.readyState == this.chatSocket.OPEN)
-                         this.chatSocket.send(JSON.stringify({'token':this.token,"command":'join'}))
+
+                        console.log('Connection Established! with room id'+this.chatRoom.uri)
+                        
+                         
     
                 }
                 catch(e){
-                        console.log('Error Connecting to chat room with id : '+this.chatRoom.id)
+                        console.log('Error Connecting to chat room with id : '+this.chatRoom.id+' with error '+e)
                 }
                 finally {
-                        console.log('finally..')
+                        console.log('finally..')    
                 }
+                
         },
 
         sendMessage(){
@@ -255,11 +266,12 @@ export default {
                 
                 var container = this.$el.querySelector("#messagesBox"); 
                
-                if(this.username !== messageData.sender || (container.scrollHeight) - container.scrollTop  > 600 )
+               if(this.username !== messageData.sender || (container.scrollHeight) - container.scrollTop  > 600 )
                 {   
                 
                 var audio = new Audio(require('@/assets/new message.mp3'));
                 document.title = "New Message @ "+messageData.sender
+                if(!this.muted)
                  audio.play();
                   setTimeout (function(){ document.title=this.$store.state.currentChatRoom.name;},5000)
                 }
@@ -273,8 +285,9 @@ export default {
                 //         // Show a "Play" button so that user can start playback.
                 //     });
                 // }
-                
+                if(messageData.timestamp)
                 messageData.time = messageData.timestamp.substr(12,5)
+                
                 this.chat.push(messageData);
                 
         },
@@ -307,13 +320,16 @@ export default {
 .v-sidebar-menu{
     position:fixed!important;
     top:10% !important;
+    .vsm--toggle-btn {
+         background-color:rgba(120, 209, 210,.4)!important;
+         border:none !important;
+
+    }
 }
 
 .v-sidebar-menu.vsm_collapsed {
     height:10px !important;
-  button {
-      background-color: red;
-  }
+
 }
 
 .v-sidebar-menu.vsm_expanded {
@@ -321,10 +337,8 @@ export default {
  
 }
 .v-sidebar-menu{
-     background-color:rgba(255,255,255,.8)!important;
-  button {
-     
-  }
+     background-color:rgba(120, 209, 210,.2)!important;
+
 }
 
 
