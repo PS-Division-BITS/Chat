@@ -76,6 +76,7 @@ export default new Vuex.Store({
     },
     error (state,bl,msg)
     {
+    
       state.error=bl;
       state.errorMessage=msg;
     }

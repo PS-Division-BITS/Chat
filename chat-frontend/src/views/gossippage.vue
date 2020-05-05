@@ -22,7 +22,7 @@ import GOSSIPCARD from '../components/gossippage/gossipcard.vue'
 export default {
     data:function(){
         return {
-            rooms :[],//[{'creator' : 'xyz',description:'Timepassdsadasdsadasdasdasdadasddadsad','name' :'AH3 Hostel','count':45, uri:'/das/',users:['1','2','3','4','5']},{'creator' : 'creator',description:"description",'name' :'name','count':'count', uri:'uri',users:'[dsadsaadadasda]'}]
+            rooms :[{'creator' : 'xyz',description:'Timepassdsadasdsadasdasdasdadasddadsad','name' :'AH3 Hostel','count':45, uri:'/das/',users:['1','2','3','4','5']},{'creator' : 'creator',description:"description",'name' :'name','count':'count', uri:'uri',users:'[dsadsaadadasda]'}]
         }
     },
     components : {
@@ -39,6 +39,7 @@ export default {
         getRooms(){
            
            var token = this.$store.state.user.key;
+           var ref =this;
             this.$axios({
                 method : 'get',
                 url : this.$store.state.URLS.general.getRooms+'?token='+token
@@ -49,12 +50,12 @@ export default {
                     var res;
                     for (res in response)
                       this.rooms.push(response[res]);
-                    console.log(response,"rooms")
+                   
             })
-            .catch(error=>{
-                console.log(error)
-              
-            })  
+            .catch(err=>{
+
+               ref.$store.commit('error',true,"Username already Exists :"+err)
+            })
         }
 
     }

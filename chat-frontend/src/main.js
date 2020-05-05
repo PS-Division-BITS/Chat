@@ -8,6 +8,11 @@ import store from './store'
 import router from './router'
 Vue.config.productionTip = false
 
+import VueSidebarMenu from 'vue-sidebar-menu'
+import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
+Vue.use(VueSidebarMenu)
+
+
 import SequentialEntrance from 'vue-sequential-entrance'
 import 'vue-sequential-entrance/vue-sequential-entrance.css'
 Vue.use(SequentialEntrance);

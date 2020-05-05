@@ -2,7 +2,7 @@
   <div id="app" class="m-0 p-0">
       <transition name="error">
        <div  class="table-danger" v-if="error" @click=' this.$state.commit("error",false,"")' id="error">
-          {{errorMessage}} <span  style="position:absolute; right:15px;" class=" ml-auto"> <a href="#">&#10005;</a> </span>
+          {{errorMessage}} <span  style="position:absolute; right:15px;" class=" ml-auto"> <a href="#" @click="this.$store.commit('error',false,'')">&#10005;</a> </span>
         </div>
         </transition>
       
@@ -16,7 +16,7 @@
 export default {
   data : function(){
     return {
-        error:this.$store.state.error,
+        error:false,
         errorMessage:this.$store.state.errorMessage,
     }
   }

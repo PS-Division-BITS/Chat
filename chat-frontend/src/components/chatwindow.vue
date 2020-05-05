@@ -23,29 +23,39 @@
 
 
         </div>
-        
+
+         
+       
        <div class="container-fluid m-0 p-0" id="wrapper">
+           
+           <sidebar-menu id="sidebar" style="z-index:2;" :collapsed="true" :showOneChild="true" :widthCollapsed="'25px'" :relative="true" :hideToggle="false" :theme="'white-theme'" :menu="menu" >
+
+              
+                  <span slot="toggle-icon">#</span>
+
+            </sidebar-menu>
+        
             <div class=" p-0 pb-5 px-1" id="messagesBox">
              
                 <div v-for="data in chat" :key="data.id" class="m-0 p-0 container-fluid " >
                  
                         <div id="wrapperInside" class=" container-fluid py-1 m-0 p-0 pr-1">
                         
-                                <div id="messageInfo"  class=" align-content-center" :class="{'notification': data.msg_type === 'notification','sent': data.sender&& username === data.sender, 'recieved' : (data.sender && username !== data.sender) }">   
+                                <div id="messageInfo"  class="m-0 align-content-center" :class="{'notification': data.msg_type === 'notification','sent': data.sender&& username === data.sender, 'recieved' : (data.sender && username !== data.sender), 'ghost' : data.sender === 'Ghost' }">   
                                 
-                                    <span id="sender">
-                                        {{data.sender}}
-                                            
-                                            <!-- verified symbol -->
-                                            <span v-if="data.verified" class="verified">
-
+                                    <span  v-if="data.sender!==username" id="sender">
+                                        <span >{{data.sender}}
+                                             <span v-if="data.verified" class="pl-2 verified">
                                             </span>
-                                                <!-- timespan display -->
-                                            <span v-if="data.type !== 'notification'" class="text-secondary mx-2" :style="data.sender === username ? 'float:left;':'float:right'">{{data.time}}
-                                                
+                                        </span>   
+                                            <span v-if="data.type !== 'notification'" class="text-secondary mx-2" :style="data.sender === username ? 'float:left;':'float:right'">{{data.time}}   
                                             </span>
-                                        
                                     </span>
+                                    <span v-else>
+                                              <span v-if="data.type !== 'notification'" class="text-secondary mx-2" :style="'float:left'">{{data.time}}   
+                                            </span>
+                                    </span>
+        
                                     <hr style="width:10%" class="m-0 p-0">
                                     <div class="container-fluid m-0 p-0">
                                     <span id="messageValue" class="w-100">
@@ -61,8 +71,13 @@
             </div>
 
 
-            <div id="sendBox" @click="scrollBottom(true)"  class="input-group d-flex container-fluid align-content-end m-0 py-2  ">
-                   
+            <div id="sendBox" @click="scrollBottom(true)"  class="input-group d-flex container-fluid align-content-end m-0 p-0   ">
+                     <span class="input-group-btn">
+                        <button class="btn btn-light container" type="button"  @click="sendMessage()">
+                           <img class="img img-fluid" src="@/assets/sound.svg"/>
+                        </button>
+                      </span>
+                     
                     <input ref="message" id="message" maxlength="100"  type="text" v-model="message" @keyup.enter="sendMessage()" class="form-control"  placeholder="Enter Text Message ...">
                     <span class="input-group-btn">
                         <button class="btn btn-light container" type="button"  @click="sendMessage()">
@@ -96,6 +111,23 @@ export default {
                     
 
             ],
+            
+             menu: [
+                    {
+                        header: true,
+                        title: 'Online Users',
+                        hiddenOnCollapse: true
+                    },
+                    {
+                       title:'User 1'
+                    },
+                     {
+                       title:'User 2'
+                    },
+                     {
+                       title:'User 3'
+                    }
+                    ],
             chatSocket: WebSocket,
             chatRoom : this.$store.state.currentChatRoom
         }
@@ -262,12 +294,37 @@ export default {
 </script>
 
 <style lang="scss">
+.v-sidebar-menu{
+    position:fixed!important;
+    top:10% !important;
+}
+
+.v-sidebar-menu.vsm_collapsed {
+    height:10px !important;
+  button {
+      background-color: red;
+  }
+}
+
+.v-sidebar-menu.vsm_expanded {
+    height:40% !important;
+ 
+}
+.v-sidebar-menu{
+     background-color:rgba(255,255,255,.8)!important;
+  button {
+     
+  }
+}
+
+
+
 #chatwindow {
     position: absolute;
     height:100% !important;
     @media only screen and (min-width: 992px)
     {
-    
+        
   
     width:100%!important;
 
@@ -275,6 +332,9 @@ export default {
     
     display: inline-flex;
         
+    #sidebar{
+        display: none !important;
+    }    
     }
 }
 
@@ -346,6 +406,7 @@ export default {
     position:relative;
     align-self: flex-end !important;
     margin:0px;
+    
     background-color:rgba(234, 240, 250, 0.6);
     
     }
@@ -430,6 +491,12 @@ padding: 3px 4px 3px 4px ;
      hr {
         margin-left: auto !important;
     }
+}
+.ghost {
+    background:#d3d3d3;
+  
+    font-style: italic;
+    
 }
 
 .notification{

@@ -33,6 +33,8 @@ export default {
           
             const params = new URLSearchParams();
             params.append('username',this.nick)
+            const ref= this;
+
             this.$axios({
                 method : 'post',
                 url : this.$store.state.URLS.login,
@@ -47,7 +49,7 @@ export default {
                 {
                     var username = response.user.username;
                     var token = response.user.token;
-                    var verified = true;
+                    var verified = response.user.verified;
                     var user = {"username":username,"key":token,"verified":verified}
                   //  console.log('USER = %s key = %s ',username,key)
                     localStorage.user=JSON.stringify(user);
@@ -58,20 +60,18 @@ export default {
                 }
                 else
                 {
-                    this.error=true;
-                    this.errorMessage=response.message;
-                }
+                    this.error=true
+                    this.errorMessage="Username already exists!"
+                  //ref.$store.commit('error',true,"Username already exists!")
+                }   
 
             })
             .catch(error=>{
-                console.log(' CACHE ERROR :',error)
+              
                         /* has to be moved to try block */ 
-                          this.error=true;
-                    this.errorMessage=error;
-                 
-              
-              
-            })  
+                        console.log(error)
+                       ref.$store.commit('error',true,"Username already exists!")
+            })
          }
     }
 }

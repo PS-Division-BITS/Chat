@@ -9,12 +9,14 @@
     <transition name="translate">
         <div v-if="pagemounted" class=" translate text-light  my-4 h3">
             Get Started!
+          
         </div>
     </transition>
    
 
     <transition name="bounce-in">
-        <div class="form-container">
+          <span class="text-light"> Registration option comming soon!</span>
+        <div v-if="false" class="form-container">
             <form>
                      <transition name="translate">
                         <div v-if="error" style="font-size:90%;font-style:italic;" class="text-light m-0 p-0 ">
