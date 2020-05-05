@@ -48,8 +48,9 @@ class ChatConsumer(WebsocketConsumer):
             payload = decode_jwt(token)
             message = text_data_json['message']
             # saving msg to database
+            user = User.objects.get(username=payload['username'])
             new_msg =  Message.objects.create(
-                sender=payload['username'],
+                sender=user,
                 content=message
             )
             new_msg.chat.add(Chat.objects.get(uri=self.room_name))
