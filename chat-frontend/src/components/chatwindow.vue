@@ -278,16 +278,7 @@ export default {
                  audio.play();
                   setTimeout (function(){ document.title=this.$store.state.currentChatRoom.name;},5000)
                 }
-                // if (promise !== undefined) {
-                //     promise.then(function() {
-                        
-                //         // Autoplay started!
-                //     }).catch(error => {
-                //         console.log(error+"Audio error")
-                //         // Autoplay was prevented.
-                //         // Show a "Play" button so that user can start playback.
-                //     });
-                // }
+                
                 if(messageData.timestamp)
                 messageData.time = messageData.timestamp.substr(12,5)
                 
