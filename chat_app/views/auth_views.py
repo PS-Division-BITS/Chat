@@ -136,7 +136,7 @@ class UnverifiedUserLoginView(APIView):
         else:
             return Response(
                 data={'error': True, 'message': 'User already exists!'},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_200_OK
                 )
 
 
