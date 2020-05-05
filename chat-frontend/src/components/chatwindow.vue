@@ -158,6 +158,9 @@ export default {
                     console.log('retrying connection...')
                     setTimeout(this.setupConnection(),5000)
                 }
+
+                if(localStorage.muted)
+                this.muted=localStorage.muted
               
     },
     methods:{
@@ -211,7 +214,7 @@ export default {
              //Establishing Connection
                 try {
                         this.chatSocket.onopen = () => {
-                          
+                           this.chatSocket.send(JSON.stringify({'token':this.token,'command':'join'}))
                         };
 
                         console.log('Connection Established! with room id'+this.chatRoom.uri)
@@ -311,7 +314,12 @@ export default {
     updated : function() {
         
         this.scrollBottom(false)
-    }
+    },
+   watch : {
+       muted(){
+           localStorage.muted=this.muted;
+       }
+   }
     
 }
 </script>
