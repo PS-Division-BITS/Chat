@@ -13,3 +13,13 @@ from ..utils import decode_jwt
 
 User = get_user_model()
 
+
+class NotificationConsumer(WebsocketConsumer):
+    def connect(self):
+        pass
+    
+    def disconnect(self, close_code):
+        pass
+
+    def receive(self, text_data=None, byte_data=None):
+        pass

@@ -21,6 +21,7 @@ class ChatConsumer(WebsocketConsumer):
             self.room = Chat.objects.get(uri=self.room_name)
             self.room_group_name = 'chat_%s' % self.room_name
             self.active_rooms = set()
+            self.active_users = set()
             self.accept()
         except Exception as e:
             if settings.DEBUG:
@@ -40,7 +41,6 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data=None, byte_data=None):
         text_data_json = json.loads(text_data)
         command = text_data_json.get('command', None)
-        print(command)
         try:
             token = text_data_json['token']
             payload = decode_jwt(token)
@@ -52,8 +52,7 @@ class ChatConsumer(WebsocketConsumer):
                 self.send_room(
                     payload['username'], text_data_json['message']
                 )
-            # elif command = 'list':
-            #     self.online_users_list()
+
         except Exception as e:
             if settings.DEBUG:
                 traceback.print_exc()
@@ -63,12 +62,13 @@ class ChatConsumer(WebsocketConsumer):
         # Adding user to Chat
         self.room.participants.add(User.objects.get(username=new_user))
         self.active_rooms.add(self.room_name)
+        self.active_users.add(new_user)
         # sending notification to other users
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'chat_join',
-                'new_user': new_user
+                'new_user': new_user,
             }
         )
         # adding the user to the group
@@ -76,13 +76,21 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+        # send updated online user list to client
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'chat_list',
+                'list': self.active_users
+            }
+        )
 
     def chat_join(self, event):
         "Notify other users"
         async_to_sync(self.send(text_data=json.dumps(
             {
                 'msg_type': 'notification',
-                'message': f'{event["new_user"]} joined the chat'
+                'message': f'{event["new_user"]} joined the chat',
             }
         )))
 
@@ -90,17 +98,26 @@ class ChatConsumer(WebsocketConsumer):
         # removing user from Chat
         self.room.participants.remove(User.objects.get(username=new_user))
         self.active_rooms.discard(self.room_name)
-        # removing the user from the group
-        async_to_sync(self.channel_layer.group_discard)(
-            self.room_group_name,
-            self.channel_layer
-        )
+        self.active_users.discard(user)
         # sending notification to other users
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'chat_join',
-                'new_user': new_user
+                'new_user': new_user,
+            }
+        )
+        # removing the user from the group
+        async_to_sync(self.channel_layer.group_discard)(
+            self.room_group_name,
+            self.channel_layer
+        )
+        # send updated online user list to client
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'chat_list',
+                'list': self.active_users
             }
         )
 
@@ -109,7 +126,7 @@ class ChatConsumer(WebsocketConsumer):
         async_to_sync(self.send(text_data=json.dumps(
             {
                 'msg_type': 'notification',
-                'message': f'{event["new_user"]} left the chat'
+                'message': f'{event["new_user"]} left the chat',
             }
         )))
 
@@ -136,11 +153,19 @@ class ChatConsumer(WebsocketConsumer):
 
     def chat_message(self, event):
         "Distribute message to all users in group"
-        print('dfdsf', event)
         self.send(text_data=json.dumps(
             {
+                'msg_type': 'message',
                 'sender': event['sender'],
                 'message': event['message'],
                 'timestamp': event['timestamp']
+            }
+        ))
+
+    def chat_list(self, event):
+        self.send(text_data=json.dumps(
+            {
+                'msg_type': 'list',
+                'userList': event['list'],
             }
         ))
