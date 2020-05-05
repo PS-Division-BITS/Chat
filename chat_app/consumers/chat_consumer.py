@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+import traceback
 
 from ..models import Chat, Message
 from ..serializers import MessageSerializer
@@ -36,23 +37,24 @@ class ChatConsumer(WebsocketConsumer):
 
     # receives json content from socket
     # text data from json is already decoded here
-    def receive_json(self, content):
-        command = content.get('command', None)
-        print('ass', command)
+    def receive(self, text_data=None, byte_data=None):
+        text_data_json = json.loads(text_data)
+        command = text_data_json.get('command', None)
+        print(text_data_json)
         try:
-            token = content['token']
+            token = text_data_json['token']
             payload = decode_jwt(token)
             if command == 'join':
-                async_to_sync(self.join_room)(payload['username'])
+                self.join_room(payload['username'])
             elif command == 'leave':
-                async_to_sync(self.leave_room)(payload['username'])
+                self.leave_room(payload['username'])
             elif command == 'send':
-                async_to_sync(self.send_room)(
-                    payload['username'], content['message']
+                self.send_room(
+                    payload['username'], text_data_json['message']
                 )
         except Exception as e:
             if settings.DEBUG:
-                print(e)
+                traceback.print_exc()
             self.close()
 
     def join_room(self, new_user):
@@ -73,23 +75,23 @@ class ChatConsumer(WebsocketConsumer):
             self.channel_name
         )
         # letting client know user has joined
-        async_to_sync(self.send_json)(
+        async_to_sync(self.send(text_data=json.dumps(
                 {
                     'error': False,
                     'meesage': 'success!',
                     'room': self.room_name,
                     'user': new_user
                 }
-            )
+            )))
 
     def chat_join(self, event):
         "Notify other users"
-        async_to_sync(self.send_json)(
+        async_to_sync(self.send(text_data=json.dumps(
             {
                 'msg_type': 'notification',
                 'message': f'{event["new_user"]} joined the chat'
             }
-        )
+        )))
 
     def leave_room(self, user):
         # removing user from Chat
@@ -109,29 +111,29 @@ class ChatConsumer(WebsocketConsumer):
             }
         )
         # lettings the client know user has left
-        async_to_sync(self.send_json)(
+        async_to_sync(self.send(text_data=json.dumps(
                 {
                     'error': False,
                     'meesage': 'success!',
                     'room': self.room_name,
                     'user': new_user
                 }
-            )
+            )))
 
     def chat_leave(self, event):
         "Notify other users"
-        async_to_sync(self.send_json)(
+        async_to_sync(self.send(text_data=json.dumps(
             {
                 'msg_type': 'notification',
                 'message': f'{event["new_user"]} left the chat'
             }
-        )
+        )))
 
     # send messages to users on the group
-    def send_room(self, user, meesage):
+    def send_room(self, username, message):
         # saving message in DB
         new_msg =  Message.objects.create(
-            sender=user,
+            sender=User.objects.get(username=username),
             content=message
         )
         new_msg.chat.add(self.room)
@@ -141,7 +143,7 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'sender':  user,
+                'sender':  username,
                 'message': message,
                 'timestamp': timestamp
             }
@@ -149,6 +151,7 @@ class ChatConsumer(WebsocketConsumer):
 
     def chat_message(self, event):
         "Distribute message to all users in group"
+        print(even)
         self.send(text_data=json.dumps(
             {
                 'sender': sender,

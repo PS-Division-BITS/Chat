@@ -159,3 +159,7 @@ SESSION_COOKIE_SAMESITE = None
 
 # reserving standard usernames
 RESERVED_USERNAMES = ['admin', 'ghost',]
+# reserving uri's for default rooms
+RESERVED_URI = {
+    'main': '1'
+}

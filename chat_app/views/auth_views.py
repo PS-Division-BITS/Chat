@@ -114,6 +114,8 @@ class UnverifiedUserLoginView(APIView):
                 )
                 # loggin the new user to save credentials in session
                 login(request, user)
+                # Every user to be added to the main chat
+                user.user_chats.add(Chat.objects.get(uri=settings.RESERVED_URI['main']))
                 # getting the user IP
                 ip = get_user_ip(request)
                 token = get_jwt({'username': username, 'ip': ip})
