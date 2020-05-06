@@ -21,7 +21,7 @@ class ChatConsumer(WebsocketConsumer):
             self.room = Chat.objects.get(uri=self.room_name)
             self.room_group_name = 'chat_%s' % self.room_name
             self.active_rooms = set()
-            self.active_users = set()
+            self.active_users = list()
             self.accept()
         except Exception as e:
             if settings.DEBUG:
@@ -52,8 +52,6 @@ class ChatConsumer(WebsocketConsumer):
                 self.send_room(
                     payload['username'], text_data_json['message']
                 )
-            elif command == 'list':
-                self.online_users_list()
 
         except Exception as e:
             if settings.DEBUG:
@@ -64,7 +62,7 @@ class ChatConsumer(WebsocketConsumer):
         # Adding user to Chat
         self.room.participants.add(User.objects.get(username=new_user))
         self.active_rooms.add(self.room_name)
-        self.active_users.add(new_user)
+        self.active_users.append({'username': new_user})
         # sending notification to other users
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
@@ -100,12 +98,12 @@ class ChatConsumer(WebsocketConsumer):
         # removing user from Chat
         self.room.participants.remove(User.objects.get(username=new_user))
         self.active_rooms.discard(self.room_name)
-        self.active_users.discard(user)
+        self.active_users.remove({'username': user})
         # sending notification to other users
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
-                'type': 'chat_join',
+                'type': 'chat_leave',
                 'new_user': new_user,
             }
         )
@@ -142,7 +140,6 @@ class ChatConsumer(WebsocketConsumer):
         new_msg.chat.add(self.room)
         msg_serializer = MessageSerializer(new_msg)
         timestamp = msg_serializer.data['timestamp']
-        print(username, message, self.room_group_name)
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
@@ -164,20 +161,10 @@ class ChatConsumer(WebsocketConsumer):
             }
         ))
 
-    def online_users_list(self):
-        online_users = self.room.participants.values('username')
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': 'send_list',
-                'user_list': list(online_users),
-            }
-        )
-
-    def send_list(self, event):
+    def chat_list(self, event):
         self.send(text_data=json.dumps(
             {
-                'msg_type': 'users',
-                'userList': event['user_list']
+                'msg_type': 'list',
+                'userList': event['list'],
             }
         ))
