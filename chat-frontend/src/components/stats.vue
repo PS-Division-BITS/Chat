@@ -21,7 +21,7 @@
             </div>
         </div>
 
-
+            <hr >
         <div id="statistics" class="container-fluid py-3">
             Weird Stats
             <div class="text-secondary mt-5">
