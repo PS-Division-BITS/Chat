@@ -106,7 +106,7 @@ export default {
             chatRoom : this.$store.state.currentChatRoom,
             muted:false,
             collapseUserDiv:true,
-            userList:[{username:'ritik'},{username:'taneja'}],
+            userList:[],
         }
     },
     mounted: function(){
