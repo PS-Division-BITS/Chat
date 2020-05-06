@@ -8,7 +8,7 @@
     <div  id="description" class=" container-fluid d-flex justify-content-around text-secondary mb-1 m-0 p-0">
          
            <span v-if="data.description" class="w-50">{{data.description}}</span>
-             <span v-if="data.creator" id="started" class="text-right w-50 "> Created by : <code>{{data.creator}} </code> 
+             <span v-if="data.created_by" id="started" class="text-right w-50 "> Created by : <code>{{data.created_by}} </code> 
              </span>
         
         </div>
