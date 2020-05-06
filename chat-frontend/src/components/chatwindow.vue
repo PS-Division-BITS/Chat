@@ -1,34 +1,17 @@
 <template>
     <div id="chatwindow"  class="container-fluid m-0 p-0 ">
          
-        <div class="py-3" id="onlineUsers">
-            <div class="">  Online users</div>
-            <span class="text-secondary">Beta</span>
-            <hr class="m-0 p-0">
-            
-            <div class="py-3">
-                <div class="border my-1 mx-2" id="user" style="height:60px;">
-                    <div class="img mt-2" style="float:left">
-                        <img src="@/assets/paper-plane-solid.svg" class="img img-fluid" height="40px" width="40px">
-                    </div>
-                    <div class="desc px-3" style="float:left">
-                     <div class="text-left"> Ritik  Taneja</div>
-                       <hr  class="m-0 p-0">
-                      <div class="text-left text-secondary"> Status Status Status Status Status</div>
-                        </div>
-                </div>
-
-            </div>
-
-
-
-        </div>
-
+       <STATS
+       
+       :userList="this.userList"
+        id="stats"
+        @emitUsername="onSenderClick"
+       />
          
        
        <div class="container-fluid m-0 p-0" id="wrapper">
            
-           <sidebar-menu id="sidebar" style="z-index:2; text-align:center !important;" :rtl="true" :collapsed="collapseUserDiv" :showOneChild="true" :width="'60%'" :widthCollapsed="'25px'" :relative="true" :hideToggle="false" :theme="'white-theme'" :menu="menu" >
+           <sidebar-menu id="sidebar" style="z-index:2; top:20%!important; text-align:center !important;" :rtl="true" :collapsed="collapseUserDiv" :showOneChild="true" :width="'60%'" :widthCollapsed="'45px'" :relative="true" :hideToggle="false" :theme="'white-theme'" :menu="menu" >
 
               
                   <span slot="toggle-icon">
@@ -51,11 +34,11 @@
                                              <span v-if="data.verified" class="pl-2 verified">
                                             </span>
                                         </span>   
-                                            <span v-if="data.type !== 'notification'" class="text-secondary mx-2" :style="data.sender === username ? 'float:left;':'float:right'">{{data.time}}   
+                                            <span v-if="data.msg_type !== 'notification'" class="text-secondary mx-2" :style="data.sender === username ? 'float:left;':'float:right'">{{data.time}}   
                                             </span>
                                     </span>
                                     <span v-else>
-                                              <span v-if="data.type !== 'notification'" class="text-secondary mx-2" :style="'float:left'">{{data.time}}   
+                                              <span v-if="data.msg_type !== 'notification'" class="text-secondary mx-2" :style="'float:left'">{{data.time}}   
                                             </span> <br>
                                     </span>
         
@@ -98,7 +81,11 @@
 </template>
 
 <script>
+import STATS from '../components/stats'
 export default {
+    components:{
+       STATS
+    },
     data: function(){
         return {
             username : this.$store.state.user.username,
@@ -124,20 +111,13 @@ export default {
                         title: 'Online Users',
                         hiddenOnCollapse: true
                     },
-                    {
-                       title:'User 1'
-                    },
-                     {
-                       title:'User 2'
-                    },
-                     {
-                       title:'User 3'
-                    }
+
                     ],
             chatSocket: WebSocket,
             chatRoom : this.$store.state.currentChatRoom,
             muted:false,
             collapseUserDiv:true,
+            userList:[{username:'ritik'},{username:'taneja'}],
         }
     },
     mounted: function(){
@@ -152,15 +132,20 @@ export default {
                     
                     this.messageReceived(JSON.parse(m.data))
                 }
-                
+                var ref=this;
                 this.chatSocket.onclose = function() {
                     this.chatSocket=null;
                     console.log('retrying connection...')
-                    setTimeout(this.setupConnection(),5000)
+                    setTimeout(ref.setupConnection(),5000)
                 }
 
                 if(localStorage.muted)
-                this.muted=localStorage.muted
+                this.muted=JSON.parse(localStorage.muted)
+
+              
+             
+              
+                
               
     },
     methods:{
@@ -269,21 +254,35 @@ export default {
                 
                 var container = this.$el.querySelector("#messagesBox"); 
                
-               if(this.username !== messageData.sender || (container.scrollHeight) - container.scrollTop  > 600 )
+               if(messageData.sender && this.username !== messageData.sender || (container.scrollHeight) - container.scrollTop  > 600 )
                 {   
                 
                 var audio = new Audio(require('@/assets/new message.mp3'));
                 document.title = "New Message @ "+messageData.sender
-                if(!this.muted)
+                if(this.muted===false)
+                {
+                   
                  audio.play();
-                  setTimeout (function(){ document.title=this.$store.state.currentChatRoom.name;},5000)
+                 }// setTimeout (function(){ document.title=this.$store.state.currentChatRoom.name;},5000)
                 }
                 
                 if(messageData.timestamp)
                 messageData.time = messageData.timestamp.substr(12,5)
                 
+                if(messageData.msg_type==='notification' || messageData.msg_type==='message')
                 this.chat.push(messageData);
                 
+                if(messageData.msg_type==='notification')
+                {
+                   
+                this.userList=messageData.userList
+                  var ref = this;
+                this.userList.forEach(function(u){
+                        u.title=u.username;
+                       ref.menu.push(u)
+                      
+                  })
+                }
         },
 
 
@@ -307,9 +306,11 @@ export default {
         this.scrollBottom(false)
     },
    watch : {
+       
        muted(){
            localStorage.muted=this.muted;
-       }
+       },
+     
    }
     
 }
@@ -345,7 +346,7 @@ export default {
 #chatwindow {
     position: absolute;
     height:100% !important;
-    @media only screen and (min-width: 992px)
+    @media only screen and (min-width: 768px)
     {
         
   
@@ -361,28 +362,22 @@ export default {
     }
 }
 
-#onlineUsers{
+#stats {
     display:none;
-   
-    width:30%;
-     font-family: 'Comic Neue', cursive;
-    @media only screen and(min-width: 992px)
-    {
+    max-width: 25%!important;
+     @media only screen and(min-width: 768px)
+    {  
         background-color:rgba(234, 240, 250, 0.8);
         display: block;
     }
-
-    #user{
-        background-color:rgba(234, 240, 250, 0.9);
-    }
- 
 }
+
 
 #wrapper {
 
     
     @media only screen  and (min-width: 992px){
-        width:70%;
+      
        
     }
 }
@@ -392,12 +387,13 @@ export default {
  
     max-height: 84%;
     height:auto;
-    position:absolute;  
+    position: absolute;
     overflow-y:scroll !important;
     width: 100% !important;
+    
     @media only screen and (min-width: 992px) {
-    max-height:80%;
-    padding:0 5% 3% 5% !important ;
+    height:auto;
+    padding:0 5% 5% 5% !important ;
     margin:0px !important;
     background-color:rgba(234, 240, 250, 0.2);
     position: relative;
@@ -426,7 +422,9 @@ export default {
     
     display: block;
     
-    position:relative;
+    position:fixed;
+    width:inherit;
+    bottom:0;
     align-self: flex-end !important;
     margin:0px;
     
