@@ -21,7 +21,6 @@ class ChatConsumer(WebsocketConsumer):
             self.room = Chat.objects.get(uri=self.room_name)
             self.room_group_name = 'chat_%s' % self.room_name
             self.active_rooms = set()
-            self.active_users = list()
             self.accept()
         except Exception as e:
             if settings.DEBUG:
@@ -60,9 +59,8 @@ class ChatConsumer(WebsocketConsumer):
 
     def join_room(self, new_user):
         # Adding user to Chat
-        self.room.participants.add(User.objects.get(username=new_user))
+        self.room.online_participants.add(User.objects.get(username=new_user))
         self.active_rooms.add(self.room_name)
-        self.active_users.append({'username': new_user})
         # sending notification to other users
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
@@ -81,7 +79,7 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'chat_list',
-                'list': self.active_users
+                'list': list(self.room.online_participants.values('username'))
             }
         )
 
@@ -96,9 +94,8 @@ class ChatConsumer(WebsocketConsumer):
 
     def leave_room(self, user):
         # removing user from Chat
-        self.room.participants.remove(User.objects.get(username=new_user))
+        self.room.online_participants.remove(User.objects.get(username=new_user))
         self.active_rooms.discard(self.room_name)
-        self.active_users.remove({'username': user})
         # sending notification to other users
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
@@ -117,7 +114,7 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'chat_list',
-                'list': self.active_users
+                'list': list(self.room.online_participants.values('username'))
             }
         )
 

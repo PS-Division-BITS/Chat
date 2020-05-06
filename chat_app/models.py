@@ -66,6 +66,9 @@ class Chat(TrackableDateModel):
     participants = models.ManyToManyField(
         User, related_name='user_chats',
     )
+    online_participants = models.ManyToManyField(
+        User, related_name='user_active_chats',
+    )
 
     def get_last_50_messages(self):
         return Message.objects.filter(chat=self).order_by('create_date')
