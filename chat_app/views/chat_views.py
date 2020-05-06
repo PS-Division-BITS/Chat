@@ -92,14 +92,14 @@ class GetAppStats(APIView):
             response['values'] = {
                 'totalUsers': total_users,
                 'totalMsgs': total_msgs,
-                'userWithMostMsgs': user_with_most_msgs['username'] + ': ' + user_with_most_msgs['num_msgs'],
+                'userWithMostMsgs': str(user_with_most_msgs['username']) + ': ' + str(user_with_most_msgs['num_msgs']),
             }
-            response['attrs'] = {
+            response['attrs'] = [
                 {'display': 'Total Users', 'prop':'totalUsers'},
                 {'display': 'Total Messages sent', 'prop':'totalMsgs'},
-                {'display': 'User with Most Messages', 'prop':'userWithMostMsgs'},
-            }
-            return Response(response, status=status.HTTP_200_OK)
+                {'display': 'Most Messages', 'prop':'userWithMostMsgs'},
+            ]
+            return Response(response)
         except Exception:
             if settings.DEBUG:
                 traceback.print_exc()
