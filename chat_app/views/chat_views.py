@@ -100,7 +100,9 @@ class GetAppStats(APIView):
                 {'display': 'User with Most Messages', 'prop':'userWithMostMsgs'},
             }
             return Response(response, status=status.HTTP_200_OK)
-        else:
+        except Exception:
+            if settings.DEBUG:
+                traceback.print_exc()
             response['error'] = True
             response['message'] = 'Failed to fetch data'
             return Response(response)

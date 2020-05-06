@@ -60,6 +60,7 @@ class Chat(TrackableDateModel):
         )
     name = models.CharField(max_length=15)
     description = models.CharField(max_length=50)
+    created_by = models.CharField(max_length=50, default='admin')
     messages = models.ManyToManyField(
         Message, related_name='chat', blank=True,
     )
