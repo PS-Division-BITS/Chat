@@ -13,6 +13,7 @@ from rest_framework.decorators import  api_view, throttle_classes
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import  APIView
+import traceback
 
 from ..utils import (
     decode_jwt, get_ghost_user, get_jwt, verify_jwt,
@@ -57,11 +58,11 @@ class UserRegisterView(APIView):
             )
         except MultiValueDictKeyError as e:
             if settings.DEBUG:
-                print(e)
+                traceback.print_exc()
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
+        except Exception:
             if settings.DEBUG:
-                print(e)
+                traceback.print_exc()
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -91,9 +92,9 @@ class VerifiedUserLoginView(APIView):
                 )
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
+        except Exception:
             if settings.DEBUG:
-                print(e)
+                traceback.print_exc()
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -127,9 +128,9 @@ class UnverifiedUserLoginView(APIView):
                         },'verified': False
                     }, status=status.HTTP_200_OK
                 )
-            except Exception as e:
+            except Exception:
                 if settings.DEBUG:
-                    print(e)
+                    traceback.print_exc()
                 return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response(
@@ -165,9 +166,9 @@ class LogoutView(APIView):
                     data={'username': username,},
                     status=status.HTTP_204_NO_CONTENT
                 )
-            except Exception as e:
+            except Exception:
                 if settings.DEBUG:
-                    print("Error in CustomLogoutView.\n", e)
+                    traceback.print_exc()
                 return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         # verified user
         else:
