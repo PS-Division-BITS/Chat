@@ -272,7 +272,7 @@ export default {
                 if(messageData.msg_type==='notification' || messageData.msg_type==='message')
                 this.chat.push(messageData);
                 
-                if(messageData.msg_type==='notification')
+                if(messageData.msg_type==='list')
                 {
                    
                 this.userList=messageData.userList
