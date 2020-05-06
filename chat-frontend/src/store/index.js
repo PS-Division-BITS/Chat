@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 
 Vue.use(Vuex)
-const ip = "192.168.42.80";
+const ip = "localhost";
 const socketBase = "ws://"+ip+":8000/ws/chat/";
 const BASEURL = "http://"+ip+":8000/chat/";
 

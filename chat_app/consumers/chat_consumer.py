@@ -52,11 +52,8 @@ class ChatConsumer(WebsocketConsumer):
                 self.send_room(
                     payload['username'], text_data_json['message']
                 )
-<<<<<<< HEAD
-=======
             elif command == 'list':
                 self.online_users_list()
->>>>>>> Added online user list in chat socket
 
         except Exception as e:
             if settings.DEBUG:
@@ -167,13 +164,6 @@ class ChatConsumer(WebsocketConsumer):
             }
         ))
 
-<<<<<<< HEAD
-    def chat_list(self, event):
-        self.send(text_data=json.dumps(
-            {
-                'msg_type': 'list',
-                'userList': event['list'],
-=======
     def online_users_list(self):
         online_users = self.room.participants.values('username')
         async_to_sync(self.channel_layer.group_send)(
@@ -189,6 +179,5 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'msg_type': 'users',
                 'userList': event['user_list']
->>>>>>> Added online user list in chat socket
             }
         ))
