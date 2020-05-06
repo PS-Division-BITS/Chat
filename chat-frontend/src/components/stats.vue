@@ -25,7 +25,7 @@
         <div id="statistics" class="container-fluid py-3">
             Stats for Geeks
             <div class="text-secondary mt-5">
-               <span v-if="!this.attrs.length"> There's not enough data to show you some weird stats</span>
+               <span v-if="attrs===[]"> There's not enough data to show you some weird stats</span>
                <span v-else v-for="p in attrs" :key="p.prop"> {{p.display}} :  {{values[p.prop]}}  <br></span>
                
             </div>
@@ -42,8 +42,8 @@ export default {
     data: function(){
         return {
             stat :"",
-            attrs:[{prop:'tm',display:'Total Messages'},{prop:'nu',display:'Number of users'}],
-            values:{'tm':12121,'nu':11} 
+            attrs:[],
+            values:{} 
             
         }
     },
@@ -60,6 +60,7 @@ export default {
                     response = response.data; 
                     this.attrs=response.attrs;
                     this.values=response.values
+                    console.log(response)
             })
             .catch(error=>{
                 console.log(error)

@@ -377,10 +377,11 @@ export default {
     max-height: 84%;
     height:auto;
     position: absolute;
+    overflow-x:scroll!important;
     overflow-y:scroll !important;
     width: 100% !important;
     
-    @media only screen and (min-width: 992px) {
+    @media only screen and (min-width: 768px) {
     height:auto;
     padding:0 5% 5% 5% !important ;
     margin:0px !important;
@@ -464,7 +465,7 @@ padding: 3px 4px 3px 4px ;
     font-size:110%;
 }
 
-        @media  only screen and (min-width: 992px) {
+        @media  only screen and (min-width: 1000px) {
             max-width: 60%;
             min-width: 10%;
              padding:2px 5px 1px 5px;
