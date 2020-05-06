@@ -1,9 +1,17 @@
 <template>
   <div id="app" class="m-0 p-0">
       <transition name="error">
-       <div  class="table-danger" v-if="error" @click=' this.$state.commit("error",false,"")' id="error">
-          {{errorMessage}} <span  style="position:absolute; right:15px;" class=" ml-auto"> <a href="#" @click="this.$store.commit('error',false,'')">&#10005;</a> </span>
+       <div @click="$store.commit('error',false,'')" class="table-danger d-flex justify-content-around text-center" v-if="this.$store.state.error"  id="error">
+         <div v-if="errorMessage"> {{$store.state.errorMessage}} </div> 
+         <div v-else>Something's wrong</div>
+         <div class="text-right ml-2 "> <span class="badge-danger badge"><a class="text-light" :href="this.$store.state.GITREPO+'issues/'" target="_blank"> Report Error </a></span></div>
+
+       
+
+          
+
         </div>
+          
         </transition>
       
     <transition name="pages">

@@ -1,9 +1,9 @@
 <template>
     <div  id="form" class="mx-auto container ">
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent="">
         <div class="m-0 mb-5 p-0" v-if="error">     <code>{{errorMessage}}</code></div>
         <input class="form-control" v-model="nick" placeholder="Enter your Nick ~Guest User" type="text" id="nickname" required/>
-        <button type="submit" class="btn mt-4 btn-outline-primary"  > Get Set Go</button>
+        <button type="submit" @click="onSubmit" class="btn mt-4 btn-outline-primary"  > Get Set Go</button>
       </form>
     </div>
 </template>
@@ -31,20 +31,22 @@ export default {
         onSubmit(){   
             this.error=false;
           
+          
             const params = new URLSearchParams();
             params.append('username',this.nick)
             const ref= this;
-           
+          
             this.$axios({
                 method : 'post',
                 url : this.$store.state.URLS.login,
-                data : params
+                data : params,
+                timeout:3000,
             })
             .then(response=>{
 
                 
                 response=response.data;
-             
+                 console.log('response==='+response)
                 if(!response.error)
                 {
                     var username = response.user.username;
@@ -65,17 +67,16 @@ export default {
                   //ref.$store.commit('error',true,"Username already exists!")
                 }   
 
+                 ref.$store.commit('error',false,"''")
+
             })
             .catch(error=>{
               
                         /* has to be moved to try block */ 
                         console.log(error)
-                       ref.$store.commit('error',true,"Username already exists!")
+                       ref.$store.commit('error',true,"Unable to access the server")
             })
-            .finally(f=>{
-                console.log(f)
-                
-            })
+          
          }
     }
 }

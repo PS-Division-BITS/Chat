@@ -4,6 +4,7 @@
        <STATS
        
        :userList="this.userList"
+       :username="this.username"
         id="stats"
         @emitUsername="onSenderClick"
        />
@@ -91,20 +92,8 @@ export default {
             username : this.$store.state.user.username,
             token : this.$store.state.user.key,
             message :"",
-            chat :[{'msg_type':'notification','message':'Hii Guys, Welcome to chat.bpgc! Feel free to test this development version and report any issues directly at our git repo!'},
-                 {'sender':'admin','verified':true,'message':'777777777777777777777777777777777777777777777777777'},
-                {'sender':'ritiktaneja','verified':true,'message':'!  '},
-                 {'msg_type':'notification','message':'! haina mast '},
-                 {'sender':'ritiktaneja','verified':true,'message':'!  '},
-                 {'sender':"ritiktaneja",'verified':true,'message':'Hii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
-                  {'sender':'ritiktaneja','verified':true,'message':'Hii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
-                    {'sender':'admin','verified':true,'message':'H  ii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
-              {'sender':'admin','verified':true,'message':'Hii Guys,Welcome to BITS Goa\'s campus wide chat room!  '},
-            
-                    
-
-            ],
-            
+            chat :[],
+                       
              menu: [
                     {
                         header: true,
@@ -169,7 +158,7 @@ export default {
                     response = response.data; 
                     var r;  
                     for (r in response)
-                    response[r].time = response[r].timestamp.substr(12,5)
+                    response[r].time = response[r].timestamp.substr(11,5)
                     this.chat = response;
                   
                   
@@ -254,7 +243,7 @@ export default {
                 
                 var container = this.$el.querySelector("#messagesBox"); 
                
-               if(messageData.sender && this.username !== messageData.sender || (container.scrollHeight) - container.scrollTop  > 600 )
+               if((messageData.sender && this.username !== messageData.sender) || (container.scrollHeight) - container.scrollTop  > 600 )
                 {   
                 
                 var audio = new Audio(require('@/assets/new message.mp3'));
@@ -364,7 +353,7 @@ export default {
 
 #stats {
     display:none;
-    max-width: 25%!important;
+    width: 30%!important;
      @media only screen and(min-width: 768px)
     {  
         background-color:rgba(234, 240, 250, 0.8);

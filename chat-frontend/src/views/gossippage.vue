@@ -22,7 +22,7 @@ import GOSSIPCARD from '../components/gossippage/gossipcard.vue'
 export default {
     data:function(){
         return {
-            rooms :[{'creator' : 'xyz',description:'Timepassdsadasdsadasdasdasdadasddadsad','name' :'AH3 Hostel','count':45, uri:'/das/',users:['1','2','3','4','5']},{'creator' : 'creator',description:"description",'name' :'name','count':'count', uri:'uri',users:'[dsadsaadadasda]'}]
+            rooms :[]//[{'creator' : 'xyz',description:'Timepassdsadasdsadasdasdasdadasddadsad','name' :'AH3 Hostel','count':45, uri:'/das/',users:['1','2','3','4','5']},{'creator' : 'creator',description:"description",'name' :'name','count':'count', uri:'uri',users:'[dsadsaadadasda]'}]
         }
     },
     components : {
@@ -44,9 +44,11 @@ export default {
            
            var token = this.$store.state.user.key;
            var ref =this;
+           
             this.$axios({
                 method : 'get',
-                url : this.$store.state.URLS.general.getRooms+'?token='+token
+                url : this.$store.state.URLS.general.getRooms+'?token='+token,
+                timeout:3000,
                 
             })
             .then(response=>{
@@ -61,8 +63,8 @@ export default {
                    
             })
             .catch(err=>{
-
-               ref.$store.commit('error',true,"Username already Exists :"+err)
+                console.log(err)
+               ref.$store.commit('error',true,"Unable to get room list")
                  loader.hide();
             })
            

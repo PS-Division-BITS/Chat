@@ -128,18 +128,20 @@ async function verifyToken ()
   const params = new URLSearchParams()
   params.append('username',store.state.user.username)
   params.append('token',store.state.user.key)
-
-  await axios.post(store.state.URLS.verify, params)
+  
+  await axios.post(store.state.URLS.verify, params,{timeout:3000})
   .then(response=>{
       
       flag = response.data.verified;
      
-      console.log("Token verified : "+flag)
+     
     
       return flag;
   })
   .catch(error=>{
-    console.log('in router',error)
+
+    console.log(error)
+    store.commit('error',true,'Something\'s wrong')
     return false;
   })  
  

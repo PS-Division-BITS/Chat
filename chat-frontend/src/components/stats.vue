@@ -13,19 +13,21 @@
                         <img src="@/assets/paper-plane-solid.svg" class="img img-fluid" height="40px" width="40px">
                     </div> -->
                    
-                     <div @click="$emit('emitUsername',user.username)" class="username badge badge-primary text-left p-2">{{user.username}} </div>
-                     
+                     <div v-if="user.username!==username" @click="$emit('emitUsername',user.username)" class="username badge badge-primary text-left p-2" > {{user.username}}</div>
+                                          <div v-else class="username badge badge-warning text-left p-2" > You</div>
                        <!-- <hr  class="m-0 p-0"> -->
-                      <div class="text-left text-secondary" v-if="user.status">dsd {{user.status}}</div>         
+                      <div class="text-left text-secondary" v-if="user.status">{{user.status}}</div>         
                 </div>
             </div>
         </div>
 
             <hr >
         <div id="statistics" class="container-fluid py-3">
-            Weird Stats
+            Stats for Geeks
             <div class="text-secondary mt-5">
-               <span> There's not enough data to show you some weird stats</span>
+               <span v-if="!this.attrs.length"> There's not enough data to show you some weird stats</span>
+               <span v-else v-for="p in attrs" :key="p.prop"> {{p.display}} :  {{values[p.prop]}}  <br></span>
+               
             </div>
         </div>
 </div>
@@ -33,17 +35,37 @@
 <script>
 export default {
     props:{
-        userList:Array
+        userList:Array,
+        username:String
 
     },
     data: function(){
         return {
-            stat :""
+            stat :"",
+            attrs:[{prop:'tm',display:'Total Messages'},{prop:'nu',display:'Number of users'}],
+            values:{'tm':12121,'nu':11} 
+            
         }
     },
+    mounted : function(){
+        this.getStats()
+    },
     methods :{
-        emitUsername(username){
-            console.log(username)
+        getStats(){
+            this.$axios({
+                method : 'get',
+                url : this.$store.state.URLS.general.getStats
+            })
+            .then(response=>{
+                    response = response.data; 
+                    this.attrs=response.attrs;
+                    this.values=response.values
+            })
+            .catch(error=>{
+                console.log(error)
+               
+              
+            }) 
         }
     }
 
@@ -54,6 +76,7 @@ export default {
 #wrapper {
    
         background-color:rgba(234, 250, 250, 0.8);
+      
     
 }
 
@@ -81,8 +104,12 @@ export default {
 }
 
 #statistics {
-    height:50%;
+    height:auto;
     overflow-y:scroll;
+    font-weight: bold;
+    background:rgba(175, 240, 240, 0.5);
+    border-radius:45px 85px 45px 70px;
+    padding-bottom:25px!important;
  
 }
 </style>

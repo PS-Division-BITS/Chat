@@ -9,6 +9,8 @@ const BASEURL = "http://"+ip+":8000/chat/";
 
 var AUTHBASEURL = BASEURL + 'auth/';
 
+const GITREPO = 'https://github.com/PS-Division-BITS/Chat/'
+
 //guestUsers
 // var guest = { 
 //               'login' : AUTHBASEURL +'login/',
@@ -23,7 +25,8 @@ var AUTHBASEURL = BASEURL + 'auth/';
 //                   }
 var general = {
               loadChat : BASEURL+'preload/',
-              getRooms : BASEURL+'get-rooms/'
+              getRooms : BASEURL+'get-rooms/',
+              getStats : BASEURL+'get-stats/'
 }
 
 
@@ -46,7 +49,7 @@ export default new Vuex.Store({
     },
     
     error:false,
-    errorMessage:"Error connecting to the server",
+    errorMessage:"",
 
    URLS : { 
     login : AUTHBASEURL +'temp-login/',
@@ -54,6 +57,7 @@ export default new Vuex.Store({
     verify : AUTHBASEURL+'token/verify/',
     general :general
         },
+    GITREPO:GITREPO    
     
   
  
