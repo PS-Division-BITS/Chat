@@ -14,7 +14,7 @@
         </p>
 
         <span class="mt-2" style="font-size:1.2em;">
-            Click <code> here </code> to contact us! 
+            Click <code><a href="https://github.com/PS-Division-BITS/Chat" target="_blank"> here </a> </code> to contact us! 
         </span>
 
        
