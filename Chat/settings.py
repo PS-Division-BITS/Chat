@@ -169,4 +169,3 @@ try:
 except ImportError:
     print('No local settings found')
     pass
-
