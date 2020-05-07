@@ -59,7 +59,7 @@
 
 
             <div id="sendBox" @click="scrollBottom(true)"  class="input-group d-flex container-fluid align-content-end m-0 p-0   ">
-                      <div class="input-group">
+                     
                      <span class="input-group-prepend">
                         <button @click="muted=!muted" class="btn btn-light container" type="button" >
                           <font-awesome-icon v-if="!muted"  :icon="['fas', 'volume-up']" />
@@ -73,7 +73,7 @@
                             <img class="img img-fluid" src="@/assets/paper-plane-solid.svg"/>
                         </button>
                       </span>
-                     </div>
+                    
             </div>
 
         </div>
