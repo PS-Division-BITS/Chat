@@ -3,9 +3,9 @@ import Vuex from 'vuex'
 
 
 Vue.use(Vuex)
-const ip = "localhost";
-const socketBase = "ws://"+ip+":8000/ws/chat/";
-const BASEURL = "http://"+ip+":8000/chat/";
+const ip = "www.bpgc.in";
+const socketBase = "ws://"+ip+"/ws/chat/";
+const BASEURL =  "http://"+ip+"/chat/";
 
 var AUTHBASEURL = BASEURL + 'auth/';
 

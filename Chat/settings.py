@@ -12,14 +12,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
-# override with local settings
-try:
-    from .local_settings import *
-    print('Local settings applied')
-except ImportError:
-    print('No local settings found')
-    pass
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -33,7 +25,7 @@ SECRET_KEY = '95xlxwo+0i#8(!3_yc7yc5kjx*2x=aqvb9)2_kju5awy7sz!7_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','localhost','127.0.0.1','192.168.43.199']
+ALLOWED_HOSTS = ['*','localhost','127.0.0.1','192.168.43.199', 'chat.bpgc.in']
 
 
 # Application definition
@@ -53,8 +45,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -143,6 +135,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # rest framework settings
 REST_FRAMEWORK = {
@@ -157,10 +150,7 @@ REST_FRAMEWORK = {
 }
 
 # cross origin resource sharing between Vue and Django
-if DEBUG:
-    CORS_ORIGIN_ALLOW_ALL = True
-else:
-    CORS_ORIGIN_WHITELIST = []
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Accessing Django session cookies on cross-domains
 SESSION_COOKIE_SAMESITE = None
@@ -171,3 +161,12 @@ RESERVED_USERNAMES = ['admin', 'ghost',]
 RESERVED_URI = {
     'main': '1'
 }
+
+# override with local settings
+try:
+    from .local_settings import *
+    print('Local settings applied')
+except ImportError:
+    print('No local settings found')
+    pass
+

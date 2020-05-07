@@ -14,3 +14,12 @@ db.sqlite3
 
 # __pycache__
 **/__pycache__
+
+# local-settings
+**/local_settings.py
+
+# env files
+**/*env/
+
+# static files
+/static
