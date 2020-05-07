@@ -86,7 +86,11 @@ class GetAppStats(APIView):
             total_msgs = Message.objects.count()
             user_with_most_msgs = User.objects.annotate(num_msgs=Count(
                 'user_messages'
-            )).order_by('-num_msgs', 'id').values('username', 'num_msgs')[0]
+            )).order_by('-num_msgs', 'id').values('username', 'num_msgs')[:2]
+            if str(user_with_most_msgs[0]['username']) == 'Ghost':
+                user_with_most_msgs = user_with_most_msgs[1]
+            else:
+                user_with_most_msgs = user_with_most_msgs[0]
             response['error'] = False
             response['message'] = 'success'
             response['values'] = {
