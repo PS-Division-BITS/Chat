@@ -49,9 +49,11 @@ export default {
     },
     mounted : function(){
         this.getStats()
+       setInterval(()=>{this.getStats()},7000)
     },
     methods :{
         getStats(){
+            
             this.$axios({
                 method : 'get',
                 url : this.$store.state.URLS.general.getStats

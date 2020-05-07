@@ -67,7 +67,7 @@
                         </button>
                       </span>
                    
-                    <input ref="message" id="message" maxlength="100"  type="text" v-model="message" @keyup.enter="sendMessage()" class="form-control"  placeholder="Enter Text Message ...">
+                    <input ref="message" id="message" maxlength="100"  type="text" v-model="message" @keyup.enter="sendMessage()" class="form-control" autocomplete="off" placeholder="Enter Text Message ...">
                     <span class="input-group-append">
                         <button class="btn btn-light container" type="button"  @click="sendMessage()">
                             <img class="img img-fluid" src="@/assets/paper-plane-solid.svg"/>
@@ -266,6 +266,12 @@ export default {
                    
                 this.userList=messageData.userList
                   var ref = this;
+
+                this.menu = [ {
+                        header: true,
+                        title: 'Online Users',
+                        hiddenOnCollapse: true
+                    }]
                 this.userList.forEach(function(u){
                         u.title=u.username;
                        ref.menu.push(u)
@@ -326,7 +332,7 @@ export default {
  
 }
 .v-sidebar-menu{
-     background-color:rgba(120, 209, 210,.2)!important;
+     background-color:rgba(120, 209, 210,.9)!important;
 
 }
 

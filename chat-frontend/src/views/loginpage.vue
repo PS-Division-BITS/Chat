@@ -12,7 +12,7 @@
   
     <LOGIN v-if="toggle" class="flip mt-5"/>
   </transition>
-    <RANDOM style="position:absolute; left:12%; bottom:20%;" class="text-center mt-5"/>
+    <RANDOM style="position:fixed; left:12%; bottom:10%;" class="text-center mt-5"/>
     <FOOTER class=""/>
   </div>
 </template>
